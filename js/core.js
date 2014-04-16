@@ -4,9 +4,8 @@ function init() {
     context = canvas.getContext('2d');
     canvas.width = 800;
     canvas.height = 400;
-    debug = document.getElementsByClassName('debug')[0];
     document.addEventListener('keypress', function(e) {
-        if (e.keyCode === 32) {
+        if (e.charCode === 32) {
             isSpacePressed = !isSpacePressed;
         }
     });
@@ -58,7 +57,7 @@ function drawGrass() {
 }
 
 function drawClouds() {
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < cloudsPositions.length; i++) {
         if (cloudsPositions[i] >= canvas.width) {
             cloudsPositions[i] = -images['cloud_' + i].width;
         }
