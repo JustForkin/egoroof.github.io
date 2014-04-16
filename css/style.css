@@ -1,0 +1,12 @@
+.wrapper {
+    width: 800px;
+    margin: 20px auto;
+}
+
+.wrapper>canvas {
+    border: 1px solid #000000;
+}
+
+.wrapper>.debug {
+    margin: 20px;
+}
