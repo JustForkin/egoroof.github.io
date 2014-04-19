@@ -8,6 +8,9 @@ var images = {
     cloud_3: 'img/cloud_pink.png',
     cloud_4: 'img/cloud_red.png'
 };
+var sounds = {
+    get_lucky: 'audio/daft_punk_get_lucky.mp3'
+};
 var cloudsPositions = [0, 185, 370, 555, 740];
 var unicorns = [
     {
