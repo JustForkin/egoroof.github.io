@@ -42,12 +42,18 @@ function init() {
     }
     load(function() {
         setInterval(display, 10);
+        if (audio.isSupported) {
+            audio.play('get_lucky');
+        }
     });
 }
 
 function load(callback) {
     var successLoads = 0;
     var resourcesCount = Object.keys(images).length;
+    if (audio.isSupported) {
+        resourcesCount += Object.keys(sounds).length;
+    }
     loaderProgress(successLoads, resourcesCount);
 
     for (var name in images) {
@@ -76,7 +82,11 @@ function load(callback) {
                     audio.context.decodeAudioData(this.response,
                             function(decodedArrayBuffer) {
                                 sounds[name] = decodedArrayBuffer;
-                                audio.play(name);
+                                successLoads++;
+                                loaderProgress(successLoads, resourcesCount);
+                                if (successLoads === resourcesCount) {
+                                    callback();
+                                }
                             }, function() {
                         console.error('Не удалось декодировать файл: ' + sounds[name]);
                     });
@@ -100,19 +110,10 @@ function loaderProgress(tick, max) {
 function display() {
     if (!isSpacePressed) {
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        if (typeof (sounds.get_lucky) !== 'string') {
-            drawCopyright();
-        }
         drawGrass();
         drawClouds();
         drawUnicorns();
     }
-}
-
-function drawCopyright() {
-    canvasContext.fillStyle = '#AAAAAA';
-    canvasContext.font = 'italic 20px Arial';
-    canvasContext.fillText('Get Lucky - Daft Punk', canvas.width / 2 - 100, 25);
 }
 
 function drawGrass() {
