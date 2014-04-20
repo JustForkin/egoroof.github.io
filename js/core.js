@@ -1,17 +1,36 @@
 var audio = {
     isSupported: null,
+    isMusicLoaded: false,
     context: null,
     source: null,
     destination: null,
-    play: function(soundName) {
+    activeMusicName: '',
+    playSound: function(soundName) {
         this.source = this.context.createBufferSource();
         this.source.buffer = sounds[soundName];
         this.destination = this.context.destination;
         this.source.connect(this.destination);
         this.source.start(0);
     },
-    stop: function() {
+    stopSound: function() {
         this.source.stop(0);
+    },
+    playMusic: function(musicName) {
+        //this.source = this.context.createMediaElementSource(music[musicName]);
+        //this.destination = this.context.destination;
+        //this.source.connect(this.destination);
+        this.activeMusicName = musicName;
+        this.pauseMusic();
+        music[musicName].currentTime = 0;
+        music[musicName].play();
+    },
+    pauseMusic: function() {
+        for (var name in music) {
+            music[name].pause();
+        }
+    },
+    resumeMusic: function() {
+        music[this.activeMusicName].play();
     }
 };
 var canvasContext, canvas, isSpacePressed = false;
@@ -22,12 +41,10 @@ function init() {
     canvas.height = 400;
     document.addEventListener('keypress', function(e) {
         if (e.charCode === 32) {
-            if (audio.isSupported) {
-                if (isSpacePressed) {
-                    audio.play('get_lucky');
-                } else {
-                    audio.stop();
-                }
+            if (isSpacePressed) {
+                audio.resumeMusic();
+            } else {
+                audio.pauseMusic();
             }
             isSpacePressed = !isSpacePressed;
         }
@@ -41,10 +58,8 @@ function init() {
         console.error('Для работы звука необходима поддержка Audio API');
     }
     load(function() {
+        loadMusic();
         setInterval(display, 10);
-        if (audio.isSupported) {
-            audio.play('get_lucky');
-        }
     });
 }
 
@@ -97,6 +112,29 @@ function load(callback) {
                 xhr.send();
             })(name);
         }
+    }
+}
+
+function loadMusic() {
+    var successLoads = 0;
+    var musicCount = Object.keys(music).length;
+    for (var name in music) {
+        (function(name) {
+            var path = music[name];
+            music[name] = new Audio();
+            music[name].preload = 'auto';
+            music[name].oncanplay = function() {
+                successLoads++;
+                if (successLoads === musicCount) {
+                    audio.isMusicLoaded = true;
+                    audio.playMusic('cant_touch_this');
+                }
+            };
+            music[name].onerror = function() {
+                console.error('Не удалось загрузить файл: ' + this.src);
+            };
+            music[name].src = path;
+        })(name);
     }
 }
 

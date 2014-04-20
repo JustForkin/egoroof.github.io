@@ -9,7 +9,10 @@ var images = {
     cloud_4: 'img/cloud_red.png'
 };
 var sounds = {
-    get_lucky: 'audio/daft_punk_get_lucky.mp3'
+};
+var music = {
+    get_lucky: 'audio/daft_punk_get_lucky.mp3',
+    cant_touch_this: 'audio/mc_hammer_-_u_can_t_touch_this.mp3'
 };
 var cloudsPositions = [0, 185, 370, 555, 740];
 var unicorns = [
