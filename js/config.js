@@ -9,6 +9,7 @@ var images = {
     cloud_4: 'img/cloud_red.png'
 };
 var sounds = {
+    hit: 'audio/hit.wav'
 };
 var music = {
     //get_lucky: 'audio/daft_punk_get_lucky.mp3',

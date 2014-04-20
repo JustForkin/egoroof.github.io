@@ -179,6 +179,9 @@ function drawUnicorns() {
         }
         if (unicorns[i]['x'] + images['unicorn_right'].width >= canvas.width || unicorns[i]['x'] <= 0) {
             unicorns[i]['speedX'] *= -1;
+            if (audio.isSupported) {
+                audio.playSound('hit');
+            }
         }
         unicorns[i]['x'] += unicorns[i]['speedX'];
         unicorns[i]['y'] += unicorns[i]['speedY'];
