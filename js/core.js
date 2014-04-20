@@ -1,11 +1,15 @@
 var audio = {
     isSupported: null,
     isMusicLoaded: false,
+    isSoundsMuted: false,
     context: null,
     source: null,
     destination: null,
     activeMusicName: '',
     playSound: function(soundName) {
+        if (this.isSoundsMuted) {
+            return false;
+        }
         this.source = this.context.createBufferSource();
         this.source.buffer = sounds[soundName];
         this.destination = this.context.destination;
@@ -49,10 +53,12 @@ function init() {
         if (this.classList.contains('on')) {
             this.classList.remove('on');
             this.classList.add('off');
+            audio.isSoundsMuted = true;
             audio.pauseMusic();
         } else {
             this.classList.remove('off');
             this.classList.add('on');
+            audio.isSoundsMuted = false;
             audio.resumeMusic();
         }
     });
@@ -134,7 +140,7 @@ function loadMusic() {
                 successLoads++;
                 if (successLoads === musicCount) {
                     audio.isMusicLoaded = true;
-                    audio.playMusic('cant_touch_this');
+                    audio.playMusic('get_lucky');
                     musicSwitch.style.display = 'block';
                 }
             };
