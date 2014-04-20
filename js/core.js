@@ -41,12 +41,19 @@ function init() {
     canvas.height = 400;
     document.addEventListener('keypress', function(e) {
         if (e.charCode === 32) {
-            if (isSpacePressed) {
-                audio.resumeMusic();
-            } else {
-                audio.pauseMusic();
-            }
             isSpacePressed = !isSpacePressed;
+        }
+    });
+    musicSwitch.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (this.classList.contains('on')) {
+            this.classList.remove('on');
+            this.classList.add('off');
+            audio.pauseMusic();
+        } else {
+            this.classList.remove('off');
+            this.classList.add('on');
+            audio.resumeMusic();
         }
     });
     try {
@@ -128,6 +135,7 @@ function loadMusic() {
                 if (successLoads === musicCount) {
                     audio.isMusicLoaded = true;
                     audio.playMusic('cant_touch_this');
+                    musicSwitch.style.display = 'block';
                 }
             };
             music[name].onerror = function() {

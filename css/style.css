@@ -1,12 +1,29 @@
 .wrapper {
     width: 800px;
     margin: 20px auto;
+    position: relative;
 }
-
 .wrapper>canvas {
     border: 1px solid #000000;
 }
-
-.wrapper>.debug {
-    margin: 20px;
+.wrapper>.music {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: none;
+    background-image: url('../img/music.png');
+}
+.wrapper>.music.on {
+    background-position: 48px 0;
+}
+.wrapper>.music.on:hover {
+    background-position: 48px 48px;
+}
+.wrapper>.music.off {
+    background-position: 0 0;
+}
+.wrapper>.music.off:hover {
+    background-position: 0 48px;
 }
