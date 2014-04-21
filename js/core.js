@@ -1,13 +1,13 @@
 var audio = {
     isSupported: null,
-    isMusicLoaded: false,
     isSoundsMuted: false,
+    isTerrorMode: false,
     context: null,
     source: null,
     destination: null,
     activeMusicName: '',
     playSound: function(soundName) {
-        if (this.isSoundsMuted) {
+        if (this.isSoundsMuted || !this.isSupported) {
             return false;
         }
         this.source = this.context.createBufferSource();
@@ -20,17 +20,33 @@ var audio = {
         this.source.stop(0);
     },
     playMusic: function(musicName) {
-        //this.source = this.context.createMediaElementSource(music[musicName]);
-        //this.destination = this.context.destination;
-        //this.source.connect(this.destination);
         this.activeMusicName = musicName;
-        this.pauseMusic();
-        music[musicName].currentTime = 0;
-        music[musicName].play();
+        if (typeof (music[musicName]) === 'string') {
+            this.loadMusic(musicName, function() {
+                audio.playMusic(musicName);
+            });
+        } else {
+            this.pauseMusic();
+            //music[musicName].currentTime = 0; firefox уходит в рекурсию
+            music[musicName].play();
+        }
+    },
+    loadMusic: function(musicName, callback) {
+        var path = music[musicName];
+        music[musicName] = new Audio();
+        music[musicName].preload = 'auto';
+        music[musicName].loop = true;
+        music[musicName].oncanplay = callback;
+        music[musicName].onerror = function() {
+            console.error('Не удалось загрузить файл: ' + this.src);
+        };
+        music[musicName].src = path;
     },
     pauseMusic: function() {
         for (var name in music) {
-            music[name].pause();
+            if (typeof (music[name]) !== 'string') {
+                music[name].pause();
+            }
         }
     },
     resumeMusic: function() {
@@ -62,6 +78,13 @@ function init() {
             audio.resumeMusic();
         }
     });
+    terrorMode.addEventListener('click', function(e) {
+        e.preventDefault();
+        isSpacePressed = false;
+        audio.playMusic('cant_touch_this');
+        audio.isTerrorMode = true;
+        this.parentNode.removeChild(this);
+    });
     try {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         audio.context = new AudioContext();
@@ -71,7 +94,9 @@ function init() {
         console.error('Для работы звука необходима поддержка Audio API');
     }
     load(function() {
-        loadMusic();
+        musicSwitch.style.display = 'block';
+        terrorMode.style.display = 'block';
+        audio.playMusic('get_lucky');
         setInterval(display, 10);
     });
 }
@@ -128,30 +153,6 @@ function load(callback) {
     }
 }
 
-function loadMusic() {
-    var successLoads = 0;
-    var musicCount = Object.keys(music).length;
-    for (var name in music) {
-        (function(name) {
-            var path = music[name];
-            music[name] = new Audio();
-            music[name].preload = 'auto';
-            music[name].oncanplay = function() {
-                successLoads++;
-                if (successLoads === musicCount) {
-                    audio.isMusicLoaded = true;
-                    audio.playMusic('get_lucky');
-                    musicSwitch.style.display = 'block';
-                }
-            };
-            music[name].onerror = function() {
-                console.error('Не удалось загрузить файл: ' + this.src);
-            };
-            music[name].src = path;
-        })(name);
-    }
-}
-
 function loaderProgress(tick, max) {
     var message = 'Загрузка: ' + tick + ' из ' + max;
     canvasContext.font = 'italic 30px Arial';
@@ -187,25 +188,29 @@ function drawClouds() {
 }
 
 function drawUnicorns() {
+    var sound = 'hit';
+    var imageLeft = 'unicorn_left';
+    var imageRight = 'unicorn_right';
+    if (audio.isTerrorMode) {
+        sound = 'ak47';
+        imageLeft = 'terrorist_left';
+        imageRight = 'terrorist_right';
+    }
     for (var i in unicorns) {
-        if (unicorns[i]['y'] + images['unicorn_right'].height >= canvas.height || unicorns[i]['y'] <= 0) {
+        if (unicorns[i]['y'] + images[imageRight].height >= canvas.height || unicorns[i]['y'] <= 0) {
             unicorns[i]['speedY'] *= -1;
-            if (audio.isSupported) {
-                audio.playSound('hit');
-            }
+            audio.playSound(sound);
         }
-        if (unicorns[i]['x'] + images['unicorn_right'].width >= canvas.width || unicorns[i]['x'] <= 0) {
+        if (unicorns[i]['x'] + images[imageRight].width >= canvas.width || unicorns[i]['x'] <= 0) {
             unicorns[i]['speedX'] *= -1;
-            if (audio.isSupported) {
-                audio.playSound('hit');
-            }
+            audio.playSound(sound);
         }
         unicorns[i]['x'] += unicorns[i]['speedX'];
         unicorns[i]['y'] += unicorns[i]['speedY'];
         if (unicorns[i]['speedX'] > 0) {
-            canvasContext.drawImage(images['unicorn_right'], unicorns[i]['x'], unicorns[i]['y']);
+            canvasContext.drawImage(images[imageRight], unicorns[i]['x'], unicorns[i]['y']);
         } else {
-            canvasContext.drawImage(images['unicorn_left'], unicorns[i]['x'], unicorns[i]['y']);
+            canvasContext.drawImage(images[imageLeft], unicorns[i]['x'], unicorns[i]['y']);
         }
     }
 }

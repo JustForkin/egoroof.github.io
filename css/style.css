@@ -27,3 +27,12 @@
 .wrapper>.music.off:hover {
     background-position: 0 48px;
 }
+.wrapper>.terror_mode {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background-image: url('../img/terror_mode.png');
+    display: none;
+}
