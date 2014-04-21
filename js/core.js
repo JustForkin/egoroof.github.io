@@ -4,6 +4,8 @@ var audio = {
     isTerrorMode: false,
     context: null,
     source: null,
+    gainNode: null,
+    gainValue: 0.2,
     destination: null,
     activeMusicName: '',
     playSound: function(soundName) {
@@ -13,7 +15,11 @@ var audio = {
         this.source = this.context.createBufferSource();
         this.source.buffer = sounds[soundName];
         this.destination = this.context.destination;
-        this.source.connect(this.destination);
+        this.gainNode = this.context.createGain();
+        this.gainNode.gain.value = this.gainValue;
+
+        this.source.connect(this.gainNode);
+        this.gainNode.connect(this.destination);
         this.source.start(0);
     },
     stopSound: function() {
