@@ -5,6 +5,7 @@
 }
 .wrapper>canvas {
     border: 1px solid #000000;
+    position: absolute;
 }
 .wrapper>.music {
     width: 48px;
@@ -26,6 +27,11 @@
 }
 .wrapper>.music.off:hover {
     background-position: 0 48px;
+}
+.wrapper>#fps {
+    position: absolute;
+    top: 10px;
+    left: 380px;
 }
 .wrapper>.terror_mode {
     width: 24px;

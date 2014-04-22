@@ -59,12 +59,93 @@ var audio = {
         music[this.activeMusicName].play();
     }
 };
-var canvasContext, canvas, isSpacePressed = false;
+var canvas = {
+    nodeStatic: null,
+    nodeDynamic: null,
+    contextStatic: null,
+    contextDynamic: null,
+    speed: 10,
+    rampTime: 0,
+    canChangePosition: function() {
+        var newTime = new Date().getTime();
+        if (newTime - this.rampTime > this.speed) {
+            this.rampTime = newTime;
+            return true;
+        }
+        return false;
+    },
+    clear: function() {
+        this.contextDynamic.clearRect(0, 0, this.nodeDynamic.width, this.nodeDynamic.height);
+    },
+    drawGrass: function() {
+        for (var x = 8; x < this.nodeStatic.width; x += 40) {
+            for (var y = 310; y < this.nodeStatic.height; y += 30) {
+                this.contextStatic.drawImage(images['grass'], x, y);
+            }
+        }
+    },
+    drawClouds: function() {
+        for (var i = 0; i < cloudsPositions.length; i++) {
+            if (cloudsPositions[i] >= this.nodeDynamic.width) {
+                cloudsPositions[i] = -images['cloud_' + i].width;
+            }
+            this.contextDynamic.drawImage(images['cloud_' + i], cloudsPositions[i], 0);
+            cloudsPositions[i] += 1.5;
+        }
+    },
+    drawUnicorns: function() {
+        var sound = 'hit';
+        var imageLeft = 'unicorn_left';
+        var imageRight = 'unicorn_right';
+        if (audio.isTerrorMode) {
+            sound = 'ak47';
+            imageLeft = 'terrorist_left';
+            imageRight = 'terrorist_right';
+        }
+        for (var i in unicorns) {
+            if (unicorns[i]['y'] + images[imageRight].height >= this.nodeDynamic.height || unicorns[i]['y'] <= 0) {
+                unicorns[i]['speedY'] *= -1;
+                audio.playSound(sound);
+            }
+            if (unicorns[i]['x'] + images[imageRight].width >= this.nodeDynamic.width || unicorns[i]['x'] <= 0) {
+                unicorns[i]['speedX'] *= -1;
+                audio.playSound(sound);
+            }
+            unicorns[i]['x'] += unicorns[i]['speedX'];
+            unicorns[i]['y'] += unicorns[i]['speedY'];
+            if (unicorns[i]['speedX'] > 0) {
+                this.contextDynamic.drawImage(images[imageRight], unicorns[i]['x'], unicorns[i]['y']);
+            } else {
+                this.contextDynamic.drawImage(images[imageLeft], unicorns[i]['x'], unicorns[i]['y']);
+            }
+        }
+    }
+};
+var fps = {
+    current: 0,
+    updateTime: new Date().getTime(),
+    node: null,
+    update: function() {
+        this.current++;
+        var newTime = new Date().getTime();
+        if (newTime - this.updateTime > 1000) {
+            this.node.innerHTML = 'FPS: ' + this.current;
+            this.updateTime = newTime;
+            this.current = 0;
+        }
+    }
+};
+var isSpacePressed = false;
 function init() {
-    canvas = document.getElementById('canvas');
-    canvasContext = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 400;
+    canvas.nodeDynamic = document.getElementById('dynamicCanvas');
+    canvas.contextDynamic = canvas.nodeDynamic.getContext('2d');
+    canvas.nodeDynamic.width = 800;
+    canvas.nodeDynamic.height = 400;
+    canvas.nodeStatic = document.getElementById('staticCanvas');
+    canvas.contextStatic = canvas.nodeStatic.getContext('2d');
+    canvas.nodeStatic.width = 800;
+    canvas.nodeStatic.height = 400;
+    fps.node = document.getElementById('fps');
     document.addEventListener('keypress', function(e) {
         if (e.charCode === 32) {
             isSpacePressed = !isSpacePressed;
@@ -87,8 +168,13 @@ function init() {
     terrorMode.addEventListener('click', function(e) {
         e.preventDefault();
         isSpacePressed = false;
-        audio.playMusic('cant_touch_this');
         audio.isTerrorMode = true;
+        if (musicSwitch.classList.contains('off')) {
+            musicSwitch.classList.remove('off');
+            musicSwitch.classList.add('on');
+            audio.isSoundsMuted = false;
+        }
+        audio.playMusic('cant_touch_this');
         this.parentNode.removeChild(this);
     });
     try {
@@ -103,7 +189,8 @@ function init() {
         musicSwitch.style.display = 'block';
         terrorMode.style.display = 'block';
         audio.playMusic('get_lucky');
-        setInterval(display, 10);
+        canvas.drawGrass();
+        setInterval(display, 0);
     });
 }
 
@@ -161,62 +248,16 @@ function load(callback) {
 
 function loaderProgress(tick, max) {
     var message = 'Загрузка: ' + tick + ' из ' + max;
-    canvasContext.font = 'italic 30px Arial';
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-    canvasContext.fillText(message, canvas.width / 2 - 100, canvas.height / 2);
+    canvas.contextDynamic.font = 'italic 30px Arial';
+    canvas.clear();
+    canvas.contextDynamic.fillText(message, canvas.nodeDynamic.width / 2 - 100, canvas.nodeDynamic.height / 2);
 }
 
 function display() {
-    if (!isSpacePressed) {
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        drawGrass();
-        drawClouds();
-        drawUnicorns();
-    }
-}
-
-function drawGrass() {
-    for (var x = 8; x < canvas.width; x += 40) {
-        for (var y = 310; y < canvas.height; y += 30) {
-            canvasContext.drawImage(images['grass'], x, y);
-        }
-    }
-}
-
-function drawClouds() {
-    for (var i = 0; i < cloudsPositions.length; i++) {
-        if (cloudsPositions[i] >= canvas.width) {
-            cloudsPositions[i] = -images['cloud_' + i].width;
-        }
-        canvasContext.drawImage(images['cloud_' + i], cloudsPositions[i], 0);
-        cloudsPositions[i] += 1.5;
-    }
-}
-
-function drawUnicorns() {
-    var sound = 'hit';
-    var imageLeft = 'unicorn_left';
-    var imageRight = 'unicorn_right';
-    if (audio.isTerrorMode) {
-        sound = 'ak47';
-        imageLeft = 'terrorist_left';
-        imageRight = 'terrorist_right';
-    }
-    for (var i in unicorns) {
-        if (unicorns[i]['y'] + images[imageRight].height >= canvas.height || unicorns[i]['y'] <= 0) {
-            unicorns[i]['speedY'] *= -1;
-            audio.playSound(sound);
-        }
-        if (unicorns[i]['x'] + images[imageRight].width >= canvas.width || unicorns[i]['x'] <= 0) {
-            unicorns[i]['speedX'] *= -1;
-            audio.playSound(sound);
-        }
-        unicorns[i]['x'] += unicorns[i]['speedX'];
-        unicorns[i]['y'] += unicorns[i]['speedY'];
-        if (unicorns[i]['speedX'] > 0) {
-            canvasContext.drawImage(images[imageRight], unicorns[i]['x'], unicorns[i]['y']);
-        } else {
-            canvasContext.drawImage(images[imageLeft], unicorns[i]['x'], unicorns[i]['y']);
-        }
+    fps.update();
+    if (!isSpacePressed && canvas.canChangePosition()) {
+        canvas.clear();
+        canvas.drawClouds();
+        canvas.drawUnicorns();
     }
 }
