@@ -27,25 +27,31 @@ var unicorns = [
         y: 1
     },
     {
-        speedX: 1.5,
+        speedX: 2,
         speedY: 3,
         x: 100,
         y: 20
     },
     {
-        speedX: 1,
+        speedX: 2,
+        speedY: 2,
+        x: 400,
+        y: 100
+    },
+    {
+        speedX: 1.5,
         speedY: 0,
         x: 500,
         y: 245
     },
     {
-        speedX: 1,
+        speedX: 1.5,
         speedY: 0,
         x: 400,
         y: 265
     },
     {
-        speedX: 1,
+        speedX: 1.5,
         speedY: 0,
         x: 300,
         y: 285

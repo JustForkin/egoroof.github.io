@@ -64,16 +64,6 @@ var canvas = {
     nodeDynamic: null,
     contextStatic: null,
     contextDynamic: null,
-    speed: 10,
-    rampTime: 0,
-    canChangePosition: function() {
-        var newTime = new Date().getTime();
-        if (newTime - this.rampTime > this.speed) {
-            this.rampTime = newTime;
-            return true;
-        }
-        return false;
-    },
     clear: function() {
         this.contextDynamic.clearRect(0, 0, this.nodeDynamic.width, this.nodeDynamic.height);
     },
@@ -90,7 +80,7 @@ var canvas = {
                 cloudsPositions[i] = -images['cloud_' + i].width;
             }
             this.contextDynamic.drawImage(images['cloud_' + i], cloudsPositions[i], 0);
-            cloudsPositions[i] += 1.5;
+            cloudsPositions[i] += 2;
         }
     },
     drawUnicorns: function() {
@@ -190,7 +180,7 @@ function init() {
         terrorMode.style.display = 'block';
         audio.playMusic('get_lucky');
         canvas.drawGrass();
-        setInterval(display, 0);
+        display();
     });
 }
 
@@ -254,8 +244,9 @@ function loaderProgress(tick, max) {
 }
 
 function display() {
+    requestAnimationFrame(display);
     fps.update();
-    if (!isSpacePressed && canvas.canChangePosition()) {
+    if (!isSpacePressed) {
         canvas.clear();
         canvas.drawClouds();
         canvas.drawUnicorns();
