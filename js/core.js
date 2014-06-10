@@ -60,23 +60,36 @@ var audio = {
     }
 };
 var canvas = {
+    width: 800,
+    height: 400,
     nodeStatic: null,
     nodeDynamic: null,
     contextStatic: null,
     contextDynamic: null,
+    init: function() {
+        this.nodeDynamic = document.getElementById('dynamicCanvas');
+        this.contextDynamic = this.nodeDynamic.getContext('2d');
+        this.nodeDynamic.width = this.width;
+        this.nodeDynamic.height = this.height;
+
+        this.nodeStatic = document.getElementById('staticCanvas');
+        this.contextStatic = this.nodeStatic.getContext('2d');
+        this.nodeStatic.width = this.width;
+        this.nodeStatic.height = this.height;
+    },
     clear: function() {
-        this.contextDynamic.clearRect(0, 0, this.nodeDynamic.width, this.nodeDynamic.height);
+        this.contextDynamic.clearRect(0, 0, this.width, this.height);
     },
     drawGrass: function() {
-        for (var x = 8; x < this.nodeStatic.width; x += 40) {
-            for (var y = 310; y < this.nodeStatic.height; y += 30) {
+        for (var x = 8; x < this.width; x += 40) {
+            for (var y = 310; y < this.height; y += 30) {
                 this.contextStatic.drawImage(images['grass'], x, y);
             }
         }
     },
     drawClouds: function() {
         for (var i = 0; i < cloudsPositions.length; i++) {
-            if (cloudsPositions[i] >= this.nodeDynamic.width) {
+            if (cloudsPositions[i] >= this.width) {
                 cloudsPositions[i] = -images['cloud_' + i].width;
             }
             this.contextDynamic.drawImage(images['cloud_' + i], cloudsPositions[i], 0);
@@ -93,11 +106,11 @@ var canvas = {
             imageRight = 'terrorist_right';
         }
         for (var i in unicorns) {
-            if (unicorns[i]['y'] + images[imageRight].height >= this.nodeDynamic.height || unicorns[i]['y'] <= 0) {
+            if (unicorns[i]['y'] + images[imageRight].height >= this.height || unicorns[i]['y'] <= 0) {
                 unicorns[i]['speedY'] *= -1;
                 audio.playSound(sound);
             }
-            if (unicorns[i]['x'] + images[imageRight].width >= this.nodeDynamic.width || unicorns[i]['x'] <= 0) {
+            if (unicorns[i]['x'] + images[imageRight].width >= this.width || unicorns[i]['x'] <= 0) {
                 unicorns[i]['speedX'] *= -1;
                 audio.playSound(sound);
             }
@@ -125,43 +138,114 @@ var fps = {
         }
     }
 };
+var fullScreen = {
+    request: function() {
+        var element = document.getElementsByTagName('html')[0];
+        if (element.requestFullScreen) {
+            element.requestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    },
+    cancel: function() {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    },
+    init: function() {
+        document.addEventListener('webkitfullscreenchange', this.onChange);
+        document.addEventListener('mozfullscreenchange', this.onChange);
+        document.addEventListener('MSFullscreenChange', this.onChange); // fucked event name!
+        document.addEventListener('fullscreenchange', this.onChange);
+    },
+    onChange: function() {
+        var element = document.fullscreenElement
+                || document.webkitFullscreenElement
+                || document.mozFullScreenElement // fuck
+                || document.msFullscreenElement;
+        if (element) {
+            // открытие
+            canvas.width = window.screen.width;
+            canvas.height = window.screen.height;
+        } else {
+            // закрытие
+            canvas.width = 800;
+            canvas.height = 400;
+        }
+        var wrapElem = document.getElementsByClassName('wrapper')[0];
+        wrapElem.classList.toggle('full');
+        canvas.init();
+        canvas.drawGrass();
+    }
+};
 var isSpacePressed = false;
 function init() {
-    canvas.nodeDynamic = document.getElementById('dynamicCanvas');
-    canvas.contextDynamic = canvas.nodeDynamic.getContext('2d');
-    canvas.nodeDynamic.width = 800;
-    canvas.nodeDynamic.height = 400;
-    canvas.nodeStatic = document.getElementById('staticCanvas');
-    canvas.contextStatic = canvas.nodeStatic.getContext('2d');
-    canvas.nodeStatic.width = 800;
-    canvas.nodeStatic.height = 400;
+    window.applicationCache.addEventListener('downloading', function() {
+        updater.classList.add('loading');
+        updater.title = 'Загружается обновление...';
+    }, false);
+    window.applicationCache.addEventListener('updateready', function() {
+        window.applicationCache.swapCache();
+        updater.onclick = function(e) {
+            e.preventDefault();
+            window.location.reload();
+        };
+        updater.classList.remove('rotate');
+        updater.classList.add('updated');
+        updater.title = 'Обновление загружено. Нажмите для перезапуска.';
+    }, false);
+    window.applicationCache.addEventListener('noupdate', function() {
+        updater.parentNode.removeChild(updater);
+    }, false);
+    window.applicationCache.addEventListener('error', function() {
+        updater.parentNode.removeChild(updater);
+    }, false);
+
+    canvas.init();
     fps.node = document.getElementById('fps');
     document.addEventListener('keypress', function(e) {
         if (e.charCode === 32) {
             isSpacePressed = !isSpacePressed;
         }
     });
+
+    fullScreen.init();
+    fullScreenSwitch.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (this.classList.contains('icon-fullscreen-close')) {
+            fullScreen.cancel();
+        } else {
+            fullScreen.request();
+        }
+        this.classList.toggle('icon-fullscreen-close');
+    });
     musicSwitch.addEventListener('click', function(e) {
         e.preventDefault();
-        if (this.classList.contains('on')) {
-            this.classList.remove('on');
-            this.classList.add('off');
-            audio.isSoundsMuted = true;
-            audio.pauseMusic();
-        } else {
-            this.classList.remove('off');
-            this.classList.add('on');
+        if (this.classList.contains('icon-music-off')) {
             audio.isSoundsMuted = false;
             audio.resumeMusic();
+        } else {
+            audio.isSoundsMuted = true;
+            audio.pauseMusic();
         }
+        this.classList.toggle('icon-music-off');
     });
     terrorMode.addEventListener('click', function(e) {
         e.preventDefault();
         isSpacePressed = false;
         audio.isTerrorMode = true;
-        if (musicSwitch.classList.contains('off')) {
-            musicSwitch.classList.remove('off');
-            musicSwitch.classList.add('on');
+        if (musicSwitch.classList.contains('icon-music-off')) {
+            musicSwitch.classList.remove('icon-music-off');
             audio.isSoundsMuted = false;
         }
         audio.playMusic('cant_touch_this');
@@ -176,9 +260,8 @@ function init() {
         console.error('Для работы звука необходима поддержка Audio API');
     }
     load(function() {
-        musicSwitch.style.display = 'block';
-        terrorMode.style.display = 'block';
-        audio.playMusic('get_lucky');
+        showIcons();
+//        audio.playMusic('get_lucky');
         canvas.drawGrass();
         display();
     });
@@ -240,7 +323,14 @@ function loaderProgress(tick, max) {
     var message = 'Загрузка: ' + tick + ' из ' + max;
     canvas.contextDynamic.font = 'italic 30px Arial';
     canvas.clear();
-    canvas.contextDynamic.fillText(message, canvas.nodeDynamic.width / 2 - 100, canvas.nodeDynamic.height / 2);
+    canvas.contextDynamic.fillText(message, canvas.width / 2 - 100, canvas.height / 2);
+}
+
+function showIcons() {
+    var icons = document.getElementsByClassName('icon');
+    for (var i = 0; i < icons.length; i++) {
+        icons[i].style.display = 'block';
+    }
 }
 
 function display() {
