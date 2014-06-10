@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html manifest="cache.appcache">
+<html>
     <head>
         <title>Unicorns</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shorcut icon" type="image/png" href="img/favicon.png">
+        <link rel="shorcut icon" href="img/favicon.ico">
 
         <link href="css/style.css" type="text/css" rel="stylesheet">
         <script src="js/config.js"></script>
         <script src="js/core.js"></script>
     </head>
-    <body onload="init()">
+    <body>
         <div class="wrapper">
             <canvas id="staticCanvas">Для работы необходима поддержка JavaScript</canvas>
             <canvas id="dynamicCanvas"></canvas>
-            <a class="icon icon-music" href="#music" id="musicSwitch"></a>
-            <a class="icon icon-fullscreen" href="#fullScreen" id="fullScreenSwitch"></a>
-            <a class="icon icon-terror" href="#terror" id="terrorMode"></a>
+            <a class="music on" href="#music" id="musicSwitch"></a>
             <div id="fps"></div>
-            <a class="icon icon-update rotate" href="#update" id="updater" title="Проверка обновлений..." onclick="return false"></a>
+            <a class="terror_mode" href="#terror" id="terrorMode"></a>
         </div>
+        <script>init();</script>
     </body>
 </html>
