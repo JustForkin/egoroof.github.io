@@ -8,7 +8,7 @@ var audio = {
     gainValue: 0.2,
     destination: null,
     activeMusicName: '',
-    playSound: function(soundName) {
+    playSound: function (soundName) {
         if (this.isSoundsMuted || !this.isSupported) {
             return false;
         }
@@ -22,13 +22,13 @@ var audio = {
         this.gainNode.connect(this.destination);
         this.source.start(0);
     },
-    stopSound: function() {
+    stopSound: function () {
         this.source.stop(0);
     },
-    playMusic: function(musicName) {
+    playMusic: function (musicName) {
         this.activeMusicName = musicName;
         if (typeof (music[musicName]) === 'string') {
-            this.loadMusic(musicName, function() {
+            this.loadMusic(musicName, function () {
                 audio.playMusic(musicName);
             });
         } else {
@@ -37,25 +37,25 @@ var audio = {
             music[musicName].play();
         }
     },
-    loadMusic: function(musicName, callback) {
+    loadMusic: function (musicName, callback) {
         var path = music[musicName];
         music[musicName] = new Audio();
         music[musicName].preload = 'auto';
         music[musicName].loop = true;
         music[musicName].oncanplay = callback;
-        music[musicName].onerror = function() {
+        music[musicName].onerror = function () {
             console.error('Не удалось загрузить файл: ' + this.src);
         };
         music[musicName].src = path;
     },
-    pauseMusic: function() {
+    pauseMusic: function () {
         for (var name in music) {
             if (typeof (music[name]) !== 'string') {
                 music[name].pause();
             }
         }
     },
-    resumeMusic: function() {
+    resumeMusic: function () {
         music[this.activeMusicName].play();
     }
 };
@@ -64,17 +64,17 @@ var canvas = {
     nodeDynamic: null,
     contextStatic: null,
     contextDynamic: null,
-    clear: function() {
+    clear: function () {
         this.contextDynamic.clearRect(0, 0, this.nodeDynamic.width, this.nodeDynamic.height);
     },
-    drawGrass: function() {
+    drawGrass: function () {
         for (var x = 8; x < this.nodeStatic.width; x += 40) {
             for (var y = 310; y < this.nodeStatic.height; y += 30) {
                 this.contextStatic.drawImage(images['grass'], x, y);
             }
         }
     },
-    drawClouds: function() {
+    drawClouds: function () {
         for (var i = 0; i < cloudsPositions.length; i++) {
             if (cloudsPositions[i] >= this.nodeDynamic.width) {
                 cloudsPositions[i] = -images['cloud_' + i].width;
@@ -83,23 +83,27 @@ var canvas = {
             cloudsPositions[i] += 2;
         }
     },
-    drawUnicorns: function() {
-        var sound = 'hit';
+    drawUnicorns: function () {
         var imageLeft = 'unicorn_left';
         var imageRight = 'unicorn_right';
         if (audio.isTerrorMode) {
-            sound = 'ak47';
             imageLeft = 'terrorist_left';
             imageRight = 'terrorist_right';
         }
         for (var i in unicorns) {
-            if (unicorns[i]['y'] + images[imageRight].height >= this.nodeDynamic.height || unicorns[i]['y'] <= 0) {
+            var isFlyingFloor = (unicorns[i]['speedY'] !== 0 && unicorns[i]['y'] >= 210);
+            var isVerticalChange = (unicorns[i]['y'] + images[imageRight].height >= this.nodeDynamic.height || unicorns[i]['y'] <= 0);
+            if (isVerticalChange || isFlyingFloor) {
                 unicorns[i]['speedY'] *= -1;
-                audio.playSound(sound);
+                if (audio.isTerrorMode) {
+                    audio.playSound('ak47');
+                }
             }
             if (unicorns[i]['x'] + images[imageRight].width >= this.nodeDynamic.width || unicorns[i]['x'] <= 0) {
                 unicorns[i]['speedX'] *= -1;
-                audio.playSound(sound);
+                if (audio.isTerrorMode) {
+                    audio.playSound('ak47');
+                }
             }
             unicorns[i]['x'] += unicorns[i]['speedX'];
             unicorns[i]['y'] += unicorns[i]['speedY'];
@@ -115,7 +119,7 @@ var fps = {
     current: 0,
     updateTime: new Date().getTime(),
     node: null,
-    update: function() {
+    update: function () {
         this.current++;
         var newTime = new Date().getTime();
         if (newTime - this.updateTime > 1000) {
@@ -136,12 +140,12 @@ function init() {
     canvas.nodeStatic.width = 800;
     canvas.nodeStatic.height = 400;
     fps.node = document.getElementById('fps');
-    document.addEventListener('keypress', function(e) {
+    document.addEventListener('keypress', function (e) {
         if (e.charCode === 32) {
             isSpacePressed = !isSpacePressed;
         }
     });
-    musicSwitch.addEventListener('click', function(e) {
+    musicSwitch.addEventListener('click', function (e) {
         e.preventDefault();
         if (this.classList.contains('on')) {
             this.classList.remove('on');
@@ -155,7 +159,7 @@ function init() {
             audio.resumeMusic();
         }
     });
-    terrorMode.addEventListener('click', function(e) {
+    terrorMode.addEventListener('click', function (e) {
         e.preventDefault();
         isSpacePressed = false;
         audio.isTerrorMode = true;
@@ -175,7 +179,7 @@ function init() {
         audio.isSupported = false;
         console.error('Для работы звука необходима поддержка Audio API');
     }
-    load(function() {
+    load(function () {
         musicSwitch.style.display = 'block';
         terrorMode.style.display = 'block';
         audio.playMusic('get_lucky');
@@ -195,14 +199,14 @@ function load(callback) {
     for (var name in images) {
         var path = images[name];
         images[name] = new Image();
-        images[name].onload = function() {
+        images[name].onload = function () {
             successLoads++;
             loaderProgress(successLoads, resourcesCount);
             if (successLoads === resourcesCount) {
                 callback();
             }
         };
-        images[name].onerror = function() {
+        images[name].onerror = function () {
             console.error('Не удалось загрузить: ' + this.src);
         };
         images[name].src = path;
@@ -210,24 +214,24 @@ function load(callback) {
 
     if (audio.isSupported) {
         for (var name in sounds) {
-            (function(name) {
+            (function (name) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', sounds[name], true);
                 xhr.responseType = 'arraybuffer';
-                xhr.onload = function() {
+                xhr.onload = function () {
                     audio.context.decodeAudioData(this.response,
-                            function(decodedArrayBuffer) {
+                            function (decodedArrayBuffer) {
                                 sounds[name] = decodedArrayBuffer;
                                 successLoads++;
                                 loaderProgress(successLoads, resourcesCount);
                                 if (successLoads === resourcesCount) {
                                     callback();
                                 }
-                            }, function() {
+                            }, function () {
                         console.error('Не удалось декодировать файл: ' + sounds[name]);
                     });
                 };
-                xhr.onerror = function() {
+                xhr.onerror = function () {
                     console.error('Не удалось загрузить файл: ' + sounds[name]);
                 };
                 xhr.send();

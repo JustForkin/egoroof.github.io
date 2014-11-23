@@ -11,7 +11,7 @@ var images = {
     terrorist_left: 'img/terrorist_left.png'
 };
 var sounds = {
-    hit: 'audio/hit.wav',
+//    hit: 'audio/hit.wav',
     ak47: 'audio/ak47.wav'
 };
 var music = {
