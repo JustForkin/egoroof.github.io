@@ -7,17 +7,16 @@
     let isSpacePressed = false;
 
     const audio = {
-        isSupported: null,
         isSoundsMuted: false,
         isTerrorMode: false,
-        context: null,
+        context: new AudioContext(),
         source: null,
         gainNode: null,
         gainValue: 0.2,
         destination: null,
         activeMusicName: '',
         playSound: function (soundName) {
-            if (this.isSoundsMuted || !this.isSupported) {
+            if (this.isSoundsMuted) {
                 return false;
             }
             this.source = this.context.createBufferSource();
@@ -66,8 +65,8 @@
         }
     };
     const canvas = {
-        nodeStatic: null,
-        nodeDynamic: null,
+        nodeStatic: $('staticCanvas'),
+        nodeDynamic: $('dynamicCanvas'),
         contextStatic: null,
         contextDynamic: null,
         clear: function () {
@@ -124,7 +123,7 @@
     const fps = {
         current: 0,
         updateTime: new Date().getTime(),
-        node: null,
+        node: $('fps'),
         update: function () {
             this.current++;
             const newTime = new Date().getTime();
@@ -137,15 +136,12 @@
     };
 
     function init() {
-        canvas.nodeDynamic = document.getElementById('dynamicCanvas');
         canvas.contextDynamic = canvas.nodeDynamic.getContext('2d');
         canvas.nodeDynamic.width = 800;
         canvas.nodeDynamic.height = 400;
-        canvas.nodeStatic = document.getElementById('staticCanvas');
         canvas.contextStatic = canvas.nodeStatic.getContext('2d');
         canvas.nodeStatic.width = 800;
         canvas.nodeStatic.height = 400;
-        fps.node = document.getElementById('fps');
         document.addEventListener('keypress', function (e) {
             if (e.charCode === 32) {
                 isSpacePressed = !isSpacePressed;
@@ -177,13 +173,6 @@
             audio.playMusic('cant_touch_this');
             this.parentNode.removeChild(this);
         });
-        try {
-            audio.context = new AudioContext();
-            audio.isSupported = true;
-        } catch (e) {
-            audio.isSupported = false;
-            console.error('Your browser is not supported Audio API');
-        }
         load(function () {
             $('musicSwitch').style.display = 'block';
             $('terrorMode').style.display = 'block';
@@ -194,14 +183,12 @@
     }
 
     function load(onSuccess) {
+        const imagesKeys = Object.keys(config.images);
+        const soundsKeys = Object.keys(config.sounds);
         let successLoads = 0;
-        let resourcesCount = Object.keys(config.images).length;
-        if (audio.isSupported) {
-            resourcesCount += Object.keys(config.sounds).length;
-        }
+        let resourcesCount = imagesKeys.length + soundsKeys.length;
         loaderProgress(successLoads, resourcesCount);
 
-        const imagesKeys = Object.keys(config.images);
         imagesKeys.forEach(imageName => {
             const path = config.images[imageName];
             config.images[imageName] = new Image();
@@ -216,29 +203,18 @@
             config.images[imageName].src = path;
         });
 
-        if (!audio.isSupported) {
-            return;
-        }
-
-        const soundsKeys = Object.keys(config.sounds);
         soundsKeys.forEach(soundName => {
-            (function (name) {
-                const xhr = new XMLHttpRequest(); // todo use fetch
-                xhr.open('GET', config.sounds[name], true);
-                xhr.responseType = 'arraybuffer';
-                xhr.onload = function () {
-                    audio.context.decodeAudioData(this.response, decodedArrayBuffer => {
-                        config.sounds[name] = decodedArrayBuffer;
+            fetch(config.sounds[soundName])
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => audio.context.decodeAudioData(arrayBuffer, decodedData => {
+                        config.sounds[soundName] = decodedData;
                         successLoads++;
                         loaderProgress(successLoads, resourcesCount);
                         if (successLoads === resourcesCount) {
                             onSuccess();
                         }
-                    }, () => console.error('Unable to decode file: ' + config.sounds[name]));
-                };
-                xhr.onerror = () => console.error('Unable to load file: ' + config.sounds[name]);
-                xhr.send();
-            })(soundName);
+                    })
+                ).catch(e => console.error(e));
         });
     }
 
