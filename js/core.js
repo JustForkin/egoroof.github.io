@@ -156,7 +156,7 @@
     const fps = new FPS();
 
     function loaderProgress(tick, max) {
-        const message = `Загрузка: ${tick} из ${max}`;
+        const message = `Loading: ${tick} / ${max}`;
         canvas.contextDynamic.font = 'italic 30px Arial';
         canvas.clear();
         canvas.contextDynamic.fillText(message, canvas.nodeDynamic.width / 2 - 100, canvas.nodeDynamic.height / 2);
