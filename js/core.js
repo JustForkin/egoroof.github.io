@@ -38,7 +38,7 @@
                 });
             } else {
                 this.pauseMusic();
-                //music[musicName].currentTime = 0; firefox уходит в рекурсию
+                //music[musicName].currentTime = 0; firefox goes into recursion
                 config.music[musicName].play();
             }
         },
