@@ -1,0 +1,26 @@
+{
+  "name": "egoroof.github.io",
+  "version": "0.0.0-not-a-package",
+  "description": "Unicorns in the hole!",
+  "main": "not-a-package",
+  "scripts": {
+    "build": "browserify js/main.js -o app.js",
+    "build-debug": "browserify js/main.js -o app.js --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egoroof/egoroof.github.io.git"
+  },
+  "keywords": [
+    "unicorns"
+  ],
+  "author": "egoroof",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/egoroof/egoroof.github.io/issues"
+  },
+  "devDependencies": {
+    "browserify": "latest"
+  },
+  "homepage": "https://github.com/egoroof/egoroof.github.io#readme"
+}
