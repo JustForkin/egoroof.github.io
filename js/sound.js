@@ -1,8 +1,6 @@
 /* global AudioContext */
 
-'use strict';
-
-module.exports = class Sound{
+class Sound {
     constructor(config) {
         this.config = config;
         this.isSoundsMuted = false;
@@ -48,7 +46,7 @@ module.exports = class Sound{
         this.config.music[musicName].loop = true;
         this.config.music[musicName].oncanplay = callback;
         this.config.music[musicName].onerror = function () {
-            console.error('Unable to load file: ' + this.src);
+            console.error(`Unable to load file: ${this.src}`);
         };
         this.config.music[musicName].src = path;
     }
@@ -65,4 +63,6 @@ module.exports = class Sound{
     resumeMusic() {
         this.config.music[this.activeMusicName].play();
     }
-};
+}
+
+module.exports = Sound;

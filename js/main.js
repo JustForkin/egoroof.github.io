@@ -1,5 +1,3 @@
-'use strict';
-
 const Sound = require('./sound');
 const Canvas = require('./canvas');
 const FPS = require('./fps');
@@ -21,8 +19,8 @@ function loaderProgress(tick, max) {
 function load(onSuccess) {
     const imagesKeys = Object.keys(config.images);
     const soundsKeys = Object.keys(config.sounds);
+    const resourcesCount = imagesKeys.length + soundsKeys.length;
     let successLoads = 0;
-    let resourcesCount = imagesKeys.length + soundsKeys.length;
     loaderProgress(successLoads, resourcesCount);
 
     imagesKeys.forEach(imageName => {
@@ -63,28 +61,28 @@ function render() {
     }
 }
 
-document.addEventListener('keypress', function (e) {
+document.addEventListener('keypress', (e) => {
     if (e.charCode === 32) {
         isSpacePressed = !isSpacePressed;
     }
 });
 
-$('musicSwitch').addEventListener('click', function (e) {
+$('musicSwitch').addEventListener('click', (e) => {
     e.preventDefault();
-    if (this.classList.contains('on')) {
-        this.classList.remove('on');
-        this.classList.add('off');
+    if (e.target.classList.contains('on')) {
+        e.target.classList.remove('on');
+        e.target.classList.add('off');
         sound.isSoundsMuted = true;
         sound.pauseMusic();
     } else {
-        this.classList.remove('off');
-        this.classList.add('on');
+        e.target.classList.remove('off');
+        e.target.classList.add('on');
         sound.isSoundsMuted = false;
         sound.resumeMusic();
     }
 });
 
-$('terrorMode').addEventListener('click', function (e) {
+$('terrorMode').addEventListener('click', (e) => {
     e.preventDefault();
     isSpacePressed = false;
     sound.isTerrorMode = true;
@@ -94,10 +92,10 @@ $('terrorMode').addEventListener('click', function (e) {
         sound.isSoundsMuted = false;
     }
     sound.playMusic('cant_touch_this');
-    this.parentNode.removeChild(this);
+    e.target.parentNode.removeChild(e.target);
 });
 
-load(function () {
+load(() => {
     $('musicSwitch').style.display = 'block';
     $('terrorMode').style.display = 'block';
     sound.playMusic('get_lucky');

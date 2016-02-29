@@ -1,0 +1,19 @@
+module.exports = {
+    "env": {
+        "browser": true,
+        "es6": true,
+        "commonjs": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": 0,
+        "linebreak-style": 0,
+        "no-console": 1,
+        "quotes": [2, "single"],
+        "semi": [2, "always"],
+        "no-var": 2,
+        "prefer-arrow-callback": 2,
+        "prefer-const": 2,
+        "prefer-template": 2
+    }
+};

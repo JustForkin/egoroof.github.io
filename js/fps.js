@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class FPS {
+class FPS {
 
     constructor() {
         this.current = 0;
@@ -12,9 +10,11 @@ module.exports = class FPS {
         this.current++;
         const newTime = +new Date();
         if (newTime - this.updateTime > 1000) {
-            this.node.innerText = 'FPS: ' + this.current;
+            this.node.innerText = `FPS: ${this.current}`;
             this.updateTime = newTime;
             this.current = 0;
         }
     }
-};
+}
+
+module.exports = FPS;

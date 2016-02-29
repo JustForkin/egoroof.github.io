@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class Canvas {
+class Canvas {
     constructor(config, sound) {
         this.config = config;
         this.sound = sound;
@@ -28,10 +26,10 @@ module.exports = class Canvas {
 
     drawClouds() {
         this.config.cloudsPositions.forEach((position, i) => {
-            this.contextDynamic.drawImage(this.config.images['cloud_' + i], position, 0);
+            this.contextDynamic.drawImage(this.config.images[`cloud_${i}`], position, 0);
             this.config.cloudsPositions[i] += 2;
             if (this.config.cloudsPositions[i] >= this.nodeDynamic.width) {
-                this.config.cloudsPositions[i] = -this.config.images['cloud_' + i].width;
+                this.config.cloudsPositions[i] = -this.config.images[`cloud_${i}`].width;
             }
         });
     }
@@ -67,4 +65,6 @@ module.exports = class Canvas {
             }
         });
     }
-};
+}
+
+module.exports = Canvas;

@@ -4,8 +4,8 @@
   "description": "Unicorns in the hole!",
   "main": "not-a-package",
   "scripts": {
-    "build": "browserify js/main.js -o app.js",
-    "build-debug": "browserify js/main.js -o app.js --debug"
+    "lint": "eslint js/*.js",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,11 @@
     "url": "https://github.com/egoroof/egoroof.github.io/issues"
   },
   "devDependencies": {
-    "browserify": "latest"
+    "babel-core": "6.5.2",
+    "babel-loader": "6.2.4",
+    "babel-preset-es2015": "6.5.0",
+    "eslint": "2.2.0",
+    "webpack": "1.12.14"
   },
   "homepage": "https://github.com/egoroof/egoroof.github.io#readme"
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     images: {
         unicorn_right: 'img/unicorn_right.png',
