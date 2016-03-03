@@ -8,7 +8,7 @@ module.exports = {
     "rules": {
         "indent": 0,
         "linebreak-style": 0,
-        "no-console": 1,
+        "no-console": 0,
         "quotes": [2, "single"],
         "semi": [2, "always"],
         "no-var": 2,

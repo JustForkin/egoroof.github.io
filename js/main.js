@@ -39,15 +39,16 @@ function load(onSuccess) {
 
     soundsKeys.forEach(soundName => fetch(config.sounds[soundName])
         .then(response => response.arrayBuffer())
-        .then(arrayBuffer => sound.context.decodeAudioData(arrayBuffer, decodedData => {
-                config.sounds[soundName] = decodedData;
-                successLoads++;
-                loaderProgress(successLoads, resourcesCount);
-                if (successLoads === resourcesCount) {
-                    onSuccess();
-                }
-            })
-        ).catch(e => console.error(e))
+        .then(arrayBuffer => sound.context.decodeAudioData(arrayBuffer))
+        .then(decodedData => {
+            config.sounds[soundName] = decodedData;
+            successLoads++;
+            loaderProgress(successLoads, resourcesCount);
+            if (successLoads === resourcesCount) {
+                onSuccess();
+            }
+        })
+        .catch(e => console.error(e))
     );
 }
 
