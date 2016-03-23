@@ -166,7 +166,7 @@
 	        this.config.music[musicName].loop = true;
 	        this.config.music[musicName].oncanplay = callback;
 	        this.config.music[musicName].onerror = (e) => {
-	            console.error(`Unable to load file: ${path}`, e.message);
+	            console.error(`Unable to load file: ${path}`, e.currentTarget.error);
 	        };
 	        this.config.music[musicName].src = path;
 	    }
