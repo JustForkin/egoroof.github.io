@@ -46,15 +46,9 @@ class Canvas {
             const isVerticalChange = (unicorn.y + this.config.images[imageRight].height >= this.nodeDynamic.height || unicorn.y <= 0);
             if (isVerticalChange || isFlyingFloor) {
                 this.config.unicorns[i].speedY *= -1;
-                if (this.sound.isTerrorMode) {
-                    this.sound.playSound('ak47');
-                }
             }
             if (unicorn.x + this.config.images[imageRight].width >= this.nodeDynamic.width || unicorn.x <= 0) {
                 this.config.unicorns[i].speedX *= -1;
-                if (this.sound.isTerrorMode) {
-                    this.sound.playSound('ak47');
-                }
             }
             this.config.unicorns[i].x += this.config.unicorns[i].speedX;
             this.config.unicorns[i].y += this.config.unicorns[i].speedY;

@@ -18,12 +18,11 @@ function loaderProgress(tick, max) {
 
 function load(onSuccess) {
     const imagesKeys = Object.keys(config.images);
-    const soundsKeys = Object.keys(config.sounds);
-    const resourcesCount = imagesKeys.length + soundsKeys.length;
+    const resourcesCount = imagesKeys.length;
     let successLoads = 0;
     loaderProgress(successLoads, resourcesCount);
 
-    imagesKeys.forEach(imageName => {
+    imagesKeys.forEach((imageName) => {
         const path = config.images[imageName];
         config.images[imageName] = new Image();
         config.images[imageName].onload = () => {
@@ -36,20 +35,6 @@ function load(onSuccess) {
         config.images[imageName].onerror = () => console.error(`Unable to load: ${path}`);
         config.images[imageName].src = path;
     });
-
-    soundsKeys.forEach(soundName => fetch(config.sounds[soundName])
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => sound.context.decodeAudioData(arrayBuffer))
-        .then(decodedData => {
-            config.sounds[soundName] = decodedData;
-            successLoads++;
-            loaderProgress(successLoads, resourcesCount);
-            if (successLoads === resourcesCount) {
-                onSuccess();
-            }
-        })
-        .catch(e => console.error(e))
-    );
 }
 
 function render() {

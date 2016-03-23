@@ -1,1 +1,346 @@
-!function(n){function t(e){if(i[e])return i[e].exports;var o=i[e]={exports:{},id:e,loaded:!1};return n[e].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var i={};return t.m=n,t.c=i,t.p="",t(0)}([function(n,t,i){"use strict";function e(n,t){var i="Loading: "+n+" / "+t;f.contextDynamic.font="italic 30px Arial",f.clear(),f.contextDynamic.fillText(i,f.nodeDynamic.width/2-100,f.nodeDynamic.height/2)}function o(n){var t=Object.keys(u.images),i=Object.keys(u.sounds),o=t.length+i.length,s=0;e(s,o),t.forEach(function(t){var i=u.images[t];u.images[t]=new Image,u.images[t].onload=function(){s++,e(s,o),s===o&&n()},u.images[t].onerror=function(){return console.error("Unable to load: "+i)},u.images[t].src=i}),i.forEach(function(t){return fetch(u.sounds[t]).then(function(n){return n.arrayBuffer()}).then(function(n){return d.context.decodeAudioData(n)}).then(function(i){u.sounds[t]=i,s++,e(s,o),s===o&&n()})["catch"](function(n){return console.error(n)})})}function s(){requestAnimationFrame(s),h.update(),g||(f.clear(),f.drawClouds(),f.drawUnicorns())}var c=i(1),r=i(2),a=i(3),u=i(4),d=new c(u),f=new r(u,d),h=new a,l=document.getElementById.bind(document),g=!1;document.addEventListener("keypress",function(n){32===n.charCode&&(g=!g)}),l("musicSwitch").addEventListener("click",function(n){n.preventDefault(),n.target.classList.contains("on")?(n.target.classList.remove("on"),n.target.classList.add("off"),d.isSoundsMuted=!0,d.pauseMusic()):(n.target.classList.remove("off"),n.target.classList.add("on"),d.isSoundsMuted=!1,d.resumeMusic())}),l("terrorMode").addEventListener("click",function(n){n.preventDefault(),g=!1,d.isTerrorMode=!0,l("musicSwitch").classList.contains("off")&&(l("musicSwitch").classList.remove("off"),l("musicSwitch").classList.add("on"),d.isSoundsMuted=!1),d.playMusic("cant_touch_this"),n.target.parentNode.removeChild(n.target)}),o(function(){l("musicSwitch").style.display="block",l("terrorMode").style.display="block",d.playMusic("get_lucky"),f.drawGrass(),s()})},function(n,t){"use strict";function i(n,t){if(!(n instanceof t))throw new TypeError("Cannot call a class as a function")}var e=function(){function n(n,t){for(var i=0;i<t.length;i++){var e=t[i];e.enumerable=e.enumerable||!1,e.configurable=!0,"value"in e&&(e.writable=!0),Object.defineProperty(n,e.key,e)}}return function(t,i,e){return i&&n(t.prototype,i),e&&n(t,e),t}}(),o=function(){function n(t){i(this,n),this.config=t,this.isSoundsMuted=!1,this.isTerrorMode=!1,this.context=new AudioContext,this.source=null,this.gainNode=null,this.gainValue=.2,this.destination=null,this.activeMusicName=""}return e(n,[{key:"playSound",value:function(n){this.isSoundsMuted||(this.source=this.context.createBufferSource(),this.source.buffer=this.config.sounds[n],this.destination=this.context.destination,this.gainNode=this.context.createGain(),this.gainNode.gain.value=this.gainValue,this.source.connect(this.gainNode),this.gainNode.connect(this.destination),this.source.start(0))}},{key:"playMusic",value:function(n){var t=this;this.activeMusicName=n,"string"==typeof this.config.music[n]?this.loadMusic(n,function(){return t.playMusic(n)}):(this.pauseMusic(),this.config.music[n].play())}},{key:"loadMusic",value:function(n,t){var i=this.config.music[n];this.config.music[n]=new Audio,this.config.music[n].preload="auto",this.config.music[n].loop=!0,this.config.music[n].oncanplay=t,this.config.music[n].onerror=function(){console.error("Unable to load file: "+this.src)},this.config.music[n].src=i}},{key:"pauseMusic",value:function(){var n=this,t=Object.keys(this.config.music);t.forEach(function(t){"string"!=typeof n.config.music[t]&&n.config.music[t].pause()})}},{key:"resumeMusic",value:function(){this.config.music[this.activeMusicName].play()}}]),n}();n.exports=o},function(n,t){"use strict";function i(n,t){if(!(n instanceof t))throw new TypeError("Cannot call a class as a function")}var e=function(){function n(n,t){for(var i=0;i<t.length;i++){var e=t[i];e.enumerable=e.enumerable||!1,e.configurable=!0,"value"in e&&(e.writable=!0),Object.defineProperty(n,e.key,e)}}return function(t,i,e){return i&&n(t.prototype,i),e&&n(t,e),t}}(),o=function(){function n(t,e){i(this,n),this.config=t,this.sound=e,this.nodeStatic=document.getElementById("staticCanvas"),this.contextStatic=this.nodeStatic.getContext("2d"),this.nodeStatic.width=800,this.nodeStatic.height=400,this.nodeDynamic=document.getElementById("dynamicCanvas"),this.contextDynamic=this.nodeDynamic.getContext("2d"),this.nodeDynamic.width=800,this.nodeDynamic.height=400}return e(n,[{key:"clear",value:function(){this.contextDynamic.clearRect(0,0,this.nodeDynamic.width,this.nodeDynamic.height)}},{key:"drawGrass",value:function(){for(var n=8;n<this.nodeStatic.width;n+=40)for(var t=310;t<this.nodeStatic.height;t+=30)this.contextStatic.drawImage(this.config.images.grass,n,t)}},{key:"drawClouds",value:function(){var n=this;this.config.cloudsPositions.forEach(function(t,i){n.contextDynamic.drawImage(n.config.images["cloud_"+i],t,0),n.config.cloudsPositions[i]+=2,n.config.cloudsPositions[i]>=n.nodeDynamic.width&&(n.config.cloudsPositions[i]=-n.config.images["cloud_"+i].width)})}},{key:"drawUnicorns",value:function(){var n=this,t="unicorn_left",i="unicorn_right";this.sound.isTerrorMode&&(t="terrorist_left",i="terrorist_right"),this.config.unicorns.forEach(function(e,o){var s=0!==e.speedY&&e.y>=210,c=e.y+n.config.images[i].height>=n.nodeDynamic.height||e.y<=0;(c||s)&&(n.config.unicorns[o].speedY*=-1,n.sound.isTerrorMode&&n.sound.playSound("ak47")),(e.x+n.config.images[i].width>=n.nodeDynamic.width||e.x<=0)&&(n.config.unicorns[o].speedX*=-1,n.sound.isTerrorMode&&n.sound.playSound("ak47")),n.config.unicorns[o].x+=n.config.unicorns[o].speedX,n.config.unicorns[o].y+=n.config.unicorns[o].speedY,n.config.unicorns[o].speedX>0?n.contextDynamic.drawImage(n.config.images[i],n.config.unicorns[o].x,n.config.unicorns[o].y):n.contextDynamic.drawImage(n.config.images[t],n.config.unicorns[o].x,n.config.unicorns[o].y)})}}]),n}();n.exports=o},function(n,t){"use strict";function i(n,t){if(!(n instanceof t))throw new TypeError("Cannot call a class as a function")}var e=function(){function n(n,t){for(var i=0;i<t.length;i++){var e=t[i];e.enumerable=e.enumerable||!1,e.configurable=!0,"value"in e&&(e.writable=!0),Object.defineProperty(n,e.key,e)}}return function(t,i,e){return i&&n(t.prototype,i),e&&n(t,e),t}}(),o=function(){function n(){i(this,n),this.current=0,this.updateTime=+new Date,this.node=document.getElementById("fps")}return e(n,[{key:"update",value:function(){this.current++;var n=+new Date;n-this.updateTime>1e3&&(this.node.innerText="FPS: "+this.current,this.updateTime=n,this.current=0)}}]),n}();n.exports=o},function(n,t){"use strict";n.exports={images:{unicorn_right:"img/unicorn_right.png",unicorn_left:"img/unicorn_left.png",grass:"img/grass.png",cloud_0:"img/cloud_blue.png",cloud_1:"img/cloud_brown.png",cloud_2:"img/cloud_green.png",cloud_3:"img/cloud_pink.png",cloud_4:"img/cloud_red.png",terrorist_right:"img/terrorist_right.png",terrorist_left:"img/terrorist_left.png"},sounds:{ak47:"audio/ak47.wav"},music:{get_lucky:"audio/daft_punk_get_lucky.mp3",cant_touch_this:"audio/mc_hammer_-_u_can_t_touch_this.mp3"},cloudsPositions:[0,185,370,555,740],unicorns:[{speedX:1,speedY:2,x:1,y:1},{speedX:2,speedY:3,x:100,y:20},{speedX:2,speedY:2,x:400,y:100},{speedX:1.5,speedY:0,x:500,y:245},{speedX:1.5,speedY:0,x:400,y:265},{speedX:1.5,speedY:0,x:300,y:285}]}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const Sound = __webpack_require__(1);
+	const Canvas = __webpack_require__(2);
+	const FPS = __webpack_require__(3);
+	const config = __webpack_require__(4);
+
+	const sound = new Sound(config);
+	const canvas = new Canvas(config, sound);
+	const fps = new FPS();
+	const $ = document.getElementById.bind(document);
+	let isSpacePressed = false;
+
+	function loaderProgress(tick, max) {
+	    const message = `Loading: ${tick} / ${max}`;
+	    canvas.contextDynamic.font = 'italic 30px Arial';
+	    canvas.clear();
+	    canvas.contextDynamic.fillText(message, canvas.nodeDynamic.width / 2 - 100, canvas.nodeDynamic.height / 2);
+	}
+
+	function load(onSuccess) {
+	    const imagesKeys = Object.keys(config.images);
+	    const resourcesCount = imagesKeys.length;
+	    let successLoads = 0;
+	    loaderProgress(successLoads, resourcesCount);
+
+	    imagesKeys.forEach((imageName) => {
+	        const path = config.images[imageName];
+	        config.images[imageName] = new Image();
+	        config.images[imageName].onload = () => {
+	            successLoads++;
+	            loaderProgress(successLoads, resourcesCount);
+	            if (successLoads === resourcesCount) {
+	                onSuccess();
+	            }
+	        };
+	        config.images[imageName].onerror = () => console.error(`Unable to load: ${path}`);
+	        config.images[imageName].src = path;
+	    });
+	}
+
+	function render() {
+	    requestAnimationFrame(render);
+	    fps.update();
+	    if (!isSpacePressed) {
+	        canvas.clear();
+	        canvas.drawClouds();
+	        canvas.drawUnicorns();
+	    }
+	}
+
+	document.addEventListener('keypress', (e) => {
+	    if (e.charCode === 32) {
+	        isSpacePressed = !isSpacePressed;
+	    }
+	});
+
+	$('musicSwitch').addEventListener('click', (e) => {
+	    e.preventDefault();
+	    if (e.target.classList.contains('on')) {
+	        e.target.classList.remove('on');
+	        e.target.classList.add('off');
+	        sound.isSoundsMuted = true;
+	        sound.pauseMusic();
+	    } else {
+	        e.target.classList.remove('off');
+	        e.target.classList.add('on');
+	        sound.isSoundsMuted = false;
+	        sound.resumeMusic();
+	    }
+	});
+
+	$('terrorMode').addEventListener('click', (e) => {
+	    e.preventDefault();
+	    isSpacePressed = false;
+	    sound.isTerrorMode = true;
+	    if ($('musicSwitch').classList.contains('off')) {
+	        $('musicSwitch').classList.remove('off');
+	        $('musicSwitch').classList.add('on');
+	        sound.isSoundsMuted = false;
+	    }
+	    sound.playMusic('cant_touch_this');
+	    e.target.parentNode.removeChild(e.target);
+	});
+
+	load(() => {
+	    $('musicSwitch').style.display = 'block';
+	    $('terrorMode').style.display = 'block';
+	    sound.playMusic('get_lucky');
+	    canvas.drawGrass();
+	    render();
+	});
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	/* global AudioContext */
+
+	class Sound {
+	    constructor(config) {
+	        this.config = config;
+	        this.isSoundsMuted = false;
+	        this.isTerrorMode = false;
+	        this.activeMusicName = '';
+	    }
+
+	    playMusic(musicName) {
+	        this.activeMusicName = musicName;
+	        if (typeof this.config.music[musicName] === 'string') {
+	            this.loadMusic(musicName, () => this.playMusic(musicName));
+	        } else {
+	            this.pauseMusic();
+	            //music[musicName].currentTime = 0; firefox goes into recursion
+	            this.config.music[musicName].play();
+	        }
+	    }
+
+	    loadMusic(musicName, callback) {
+	        const path = this.config.music[musicName];
+	        this.config.music[musicName] = new Audio(); // todo assign to local
+	        this.config.music[musicName].preload = 'auto';
+	        this.config.music[musicName].loop = true;
+	        this.config.music[musicName].oncanplay = callback;
+	        this.config.music[musicName].onerror = (e) => {
+	            console.error(`Unable to load file: ${path}`, e);
+	        };
+	        this.config.music[musicName].src = path;
+	    }
+
+	    pauseMusic() {
+	        const musicKeys = Object.keys(this.config.music);
+	        musicKeys.forEach((musicName) => {
+	            if (typeof this.config.music[musicName] !== 'string') {
+	                this.config.music[musicName].pause();
+	            }
+	        });
+	    }
+
+	    resumeMusic() {
+	        this.config.music[this.activeMusicName].play();
+	    }
+	}
+
+	module.exports = Sound;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	class Canvas {
+	    constructor(config, sound) {
+	        this.config = config;
+	        this.sound = sound;
+	        this.nodeStatic = document.getElementById('staticCanvas');
+	        this.contextStatic = this.nodeStatic.getContext('2d');
+	        this.nodeStatic.width = 800;
+	        this.nodeStatic.height = 400;
+	        this.nodeDynamic = document.getElementById('dynamicCanvas');
+	        this.contextDynamic = this.nodeDynamic.getContext('2d');
+	        this.nodeDynamic.width = 800;
+	        this.nodeDynamic.height = 400;
+	    }
+
+	    clear() {
+	        this.contextDynamic.clearRect(0, 0, this.nodeDynamic.width, this.nodeDynamic.height);
+	    }
+
+	    drawGrass() {
+	        for (let x = 8; x < this.nodeStatic.width; x += 40) {
+	            for (let y = 310; y < this.nodeStatic.height; y += 30) {
+	                this.contextStatic.drawImage(this.config.images.grass, x, y);
+	            }
+	        }
+	    }
+
+	    drawClouds() {
+	        this.config.cloudsPositions.forEach((position, i) => {
+	            this.contextDynamic.drawImage(this.config.images[`cloud_${i}`], position, 0);
+	            this.config.cloudsPositions[i] += 2;
+	            if (this.config.cloudsPositions[i] >= this.nodeDynamic.width) {
+	                this.config.cloudsPositions[i] = -this.config.images[`cloud_${i}`].width;
+	            }
+	        });
+	    }
+
+	    drawUnicorns() {
+	        let imageLeft = 'unicorn_left';
+	        let imageRight = 'unicorn_right';
+	        if (this.sound.isTerrorMode) {
+	            imageLeft = 'terrorist_left';
+	            imageRight = 'terrorist_right';
+	        }
+	        this.config.unicorns.forEach((unicorn, i) => {
+	            const isFlyingFloor = (unicorn.speedY !== 0 && unicorn.y >= 210);
+	            const isVerticalChange = (unicorn.y + this.config.images[imageRight].height >= this.nodeDynamic.height || unicorn.y <= 0);
+	            if (isVerticalChange || isFlyingFloor) {
+	                this.config.unicorns[i].speedY *= -1;
+	            }
+	            if (unicorn.x + this.config.images[imageRight].width >= this.nodeDynamic.width || unicorn.x <= 0) {
+	                this.config.unicorns[i].speedX *= -1;
+	            }
+	            this.config.unicorns[i].x += this.config.unicorns[i].speedX;
+	            this.config.unicorns[i].y += this.config.unicorns[i].speedY;
+	            if (this.config.unicorns[i].speedX > 0) {
+	                this.contextDynamic.drawImage(this.config.images[imageRight], this.config.unicorns[i].x, this.config.unicorns[i].y);
+	            } else {
+	                this.contextDynamic.drawImage(this.config.images[imageLeft], this.config.unicorns[i].x, this.config.unicorns[i].y);
+	            }
+	        });
+	    }
+	}
+
+	module.exports = Canvas;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	class FPS {
+
+	    constructor() {
+	        this.current = 0;
+	        this.updateTime = +new Date();
+	        this.node = document.getElementById('fps');
+	    }
+
+	    update() {
+	        this.current++;
+	        const newTime = +new Date();
+	        if (newTime - this.updateTime > 1000) {
+	            this.node.innerText = `FPS: ${this.current}`;
+	            this.updateTime = newTime;
+	            this.current = 0;
+	        }
+	    }
+	}
+
+	module.exports = FPS;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	    images: {
+	        unicorn_right: 'img/unicorn_right.png',
+	        unicorn_left: 'img/unicorn_left.png',
+	        grass: 'img/grass.png',
+	        cloud_0: 'img/cloud_blue.png',
+	        cloud_1: 'img/cloud_brown.png',
+	        cloud_2: 'img/cloud_green.png',
+	        cloud_3: 'img/cloud_pink.png',
+	        cloud_4: 'img/cloud_red.png',
+	        terrorist_right: 'img/terrorist_right.png',
+	        terrorist_left: 'img/terrorist_left.png'
+	    },
+	    music: {
+	        get_lucky: 'audio/daft_punk_get_lucky.mp3',
+	        cant_touch_this: 'audio/mc_hammer_-_u_can_t_touch_this.mp3'
+	    },
+	    cloudsPositions: [0, 185, 370, 555, 740],
+	    unicorns: [{
+	        speedX: 1,
+	        speedY: 2,
+	        x: 1,
+	        y: 1
+	    }, {
+	        speedX: 2,
+	        speedY: 3,
+	        x: 100,
+	        y: 20
+	    }, {
+	        speedX: 2,
+	        speedY: 2,
+	        x: 400,
+	        y: 100
+	    }, {
+	        speedX: 1.5,
+	        speedY: 0,
+	        x: 500,
+	        y: 245
+	    }, {
+	        speedX: 1.5,
+	        speedY: 0,
+	        x: 400,
+	        y: 265
+	    }, {
+	        speedX: 1.5,
+	        speedY: 0,
+	        x: 300,
+	        y: 285
+	    }]
+	};
+
+
+/***/ }
+/******/ ]);
