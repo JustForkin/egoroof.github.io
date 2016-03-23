@@ -24,7 +24,7 @@ class Sound {
         this.config.music[musicName].loop = true;
         this.config.music[musicName].oncanplay = callback;
         this.config.music[musicName].onerror = (e) => {
-            console.error(`Unable to load file: ${e.currentTarget.src}`, e.currentTarget.error.code);
+            console.error(`Unable to load file: ${e.currentTarget.src}`, e.currentTarget.error);
         };
         this.config.music[musicName].src = path;
     }
