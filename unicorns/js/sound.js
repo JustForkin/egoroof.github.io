@@ -19,12 +19,12 @@ class Sound {
 
     loadMusic(musicName, callback) {
         const path = this.config.music[musicName];
-        this.config.music[musicName] = document.createElement('audio'); // todo assign to local
+        this.config.music[musicName] = document.createElement('audio');
         this.config.music[musicName].preload = 'auto';
         this.config.music[musicName].loop = true;
         this.config.music[musicName].oncanplay = callback;
         this.config.music[musicName].onerror = (e) => {
-            console.error(`Unable to load file: ${path}`, e.message);
+            console.error(`Unable to load file: ${e.currentTarget.src}`, e.currentTarget.error.code);
         };
         this.config.music[musicName].src = path;
     }
