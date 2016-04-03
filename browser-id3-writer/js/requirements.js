@@ -1,3 +1,5 @@
+'use strict';
+
 var unsupported = [];
 
 try {
@@ -33,7 +35,7 @@ try {
     unsupported.push('URL');
 }
 
-if (unsupported.length) {
+if (unsupported.length > 0) {
     var dangerNode = document.getElementById('alertDanger');
     dangerNode.className = 'alert alert-danger';
     dangerNode.innerText += unsupported.join(', ');

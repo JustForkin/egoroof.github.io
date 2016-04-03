@@ -40,7 +40,7 @@ function save(songArrayBuffer, picArrayBuffer) {
 $('form').addEventListener('submit', function (e) {
     e.preventDefault();
     loadFile($('song').files[0], function (songArrayBuffer) {
-        if ($('APIC').files.length) {
+        if ($('APIC').files.length > 0) {
             loadFile($('APIC').files[0], function (picArrayBuffer) {
                 save(songArrayBuffer, picArrayBuffer);
             });
@@ -48,4 +48,35 @@ $('form').addEventListener('submit', function (e) {
             save(songArrayBuffer);
         }
     });
+});
+
+$('tabsControl').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    if (!e.target.hash) {
+        return;
+    }
+
+    var menuLinks = this.querySelectorAll('li > a');
+    for (var i = 0; i < menuLinks.length; i++) {
+        var menuElem = menuLinks[i].parentNode;
+        menuElem.classList.remove('active');
+    }
+
+    e.target.parentNode.classList.add('active');
+
+    if (e.target.hash === '#main') {
+        $('tabMain').classList.remove('hidden');
+        $('tabAlbum').classList.add('hidden');
+        $('tabOther').classList.add('hidden');
+    } else if (e.target.hash === '#album') {
+        $('tabMain').classList.add('hidden');
+        $('tabAlbum').classList.remove('hidden');
+        $('tabOther').classList.add('hidden');
+    } else if (e.target.hash === '#other') {
+        $('tabMain').classList.add('hidden');
+        $('tabAlbum').classList.add('hidden');
+        $('tabOther').classList.remove('hidden');
+    }
+
 });
