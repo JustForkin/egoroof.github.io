@@ -18,25 +18,30 @@ function render() {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    unicorns.forEach(function (unicorn) {
-        context.drawImage(unicorn.img, unicorn.x, unicorn.y);
+    unicorns.forEach(function (unicorn, i) {
+        var img = (unicorn.speedX > 0) ? unicornRight : unicornLeft;
+        var outOfWidth = unicorn.x + img.width > canvas.width + Math.abs(unicorn.speedX);
+        var outOfHeight = unicorn.y + img.height > canvas.height + Math.abs(unicorn.speedY);
+        var wallWidthTouch = unicorn.x < 0 || unicorn.x + img.width > canvas.width;
+        var wallHeightTouch = unicorn.y < 0 || unicorn.y + img.height > canvas.height;
 
-        if (unicorn.x < 0 || unicorn.x + unicorn.img.width > canvas.width) {
+        if (outOfWidth || outOfHeight) {
+            delete unicorns[i];
+            return;
+        }
+
+        if (wallWidthTouch) {
             unicorn.speedX *= -1;
         }
 
-        if (unicorn.speedX > 0) {
-            unicorn.img = unicornRight;
-        } else {
-            unicorn.img = unicornLeft;
-        }
-
-        if (unicorn.y < 0 || unicorn.y + unicorn.img.height > canvas.height) {
+        if (wallHeightTouch) {
             unicorn.speedY *= -1;
         }
 
         unicorn.x += unicorn.speedX;
         unicorn.y += unicorn.speedY;
+
+        context.drawImage(img, unicorn.x, unicorn.y);
     });
 }
 
@@ -45,8 +50,7 @@ document.getElementById('summon').addEventListener('click', function () {
         x: 0,
         y: 0,
         speedX: (Math.random() * maxUnicornsSpeed | 0) + 1,
-        speedY: (Math.random() * maxUnicornsSpeed | 0) + 1,
-        img: unicornRight
+        speedY: (Math.random() * maxUnicornsSpeed | 0) + 1
     };
     unicorns.push(unicorn);
 });
