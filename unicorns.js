@@ -1,7 +1,12 @@
+var maxSpeedX = 4;
+var maxSpeedY = 2;
+var iterationsBeforeNewSpeed = 30;
+var chanceGoLeft = 0.1;
+var abroadArea = 0.3;
+
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 var unicorns = [];
-var maxUnicornsSpeed = 5;
 var unicornRight = document.createElement('img');
 var unicornLeft = document.createElement('img');
 
@@ -18,41 +23,46 @@ function render() {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    unicorns.forEach(function (unicorn, i) {
-        var img = (unicorn.speedX > 0) ? unicornRight : unicornLeft;
-        var outOfWidth = unicorn.x + img.width > canvas.width + Math.abs(unicorn.speedX);
-        var outOfHeight = unicorn.y + img.height > canvas.height + Math.abs(unicorn.speedY);
-        var wallWidthTouch = unicorn.x < 0 || unicorn.x + img.width > canvas.width;
-        var wallHeightTouch = unicorn.y < 0 || unicorn.y + img.height > canvas.height;
+    unicorns.forEach(function (unicorn) {
+        var img = (unicorn.directionX > 0) ? unicornRight : unicornLeft;
+        var leftBorderOut = unicorn.x + (img.width * (1 - abroadArea)) < 0 && unicorn.directionX < 0;
+        var rightBorderOut = unicorn.x + (img.width * abroadArea) > canvas.width && unicorn.directionX > 0;
+        var bottomBorderOut = unicorn.y + (img.height * abroadArea) > canvas.height;
 
-        if (outOfWidth || outOfHeight) {
-            delete unicorns[i];
-            return;
+        if (leftBorderOut) {
+            unicorn.x = canvas.width - (img.width * abroadArea);
+        } else if (rightBorderOut) {
+            unicorn.x = 0 - (img.width * (1 - abroadArea));
+        }
+        if (bottomBorderOut) {
+            unicorn.y = 0 - (img.height * (1 - abroadArea));
         }
 
-        if (wallWidthTouch) {
-            unicorn.speedX *= -1;
+        if (unicorn.speedIterations > iterationsBeforeNewSpeed) {
+            unicorn.speedX = Math.random() * maxSpeedX;
+            unicorn.speedY = Math.random() * maxSpeedY;
+            unicorn.speedIterations = 0;
+            unicorn.directionX = (Math.random() < chanceGoLeft) ? -1 : 1;
+        } else {
+            unicorn.speedIterations++;
         }
 
-        if (wallHeightTouch) {
-            unicorn.speedY *= -1;
-        }
-
-        unicorn.x += unicorn.speedX;
+        unicorn.x += unicorn.directionX * unicorn.speedX;
         unicorn.y += unicorn.speedY;
 
-        context.drawImage(img, unicorn.x, unicorn.y);
+        context.drawImage(img, Math.round(unicorn.x), Math.round(unicorn.y));
     });
 }
 
 document.getElementById('summon').addEventListener('click', function () {
-    var unicorn = {
+    unicorns.push({
         x: 0,
         y: 0,
-        speedX: (Math.random() * maxUnicornsSpeed | 0) + 1,
-        speedY: (Math.random() * maxUnicornsSpeed | 0) + 1
-    };
-    unicorns.push(unicorn);
+        speedX: Math.random() * maxSpeedX,
+        speedY: Math.random() * maxSpeedY,
+        speedIterations: 0,
+        directionX: 1
+    });
 });
 
 window.onresize();
