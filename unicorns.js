@@ -1,7 +1,9 @@
 var maxSpeedX = 4;
 var maxSpeedY = 2;
+var maxRotationSpeed = 15;
 var iterationsBeforeNewSpeed = 30;
-var chanceGoLeft = 0.1;
+var chanceStartRotation = 0.0005;
+var chanceGoLeft = 0.05;
 var abroadArea = 0.3;
 
 var canvas = document.getElementById('canvas');
@@ -25,42 +27,79 @@ function render() {
 
     unicorns.forEach(function (unicorn) {
         var img = (unicorn.directionX > 0) ? unicornRight : unicornLeft;
-        var leftBorderOut = unicorn.x + (img.width * (1 - abroadArea)) < 0 && unicorn.directionX < 0;
-        var rightBorderOut = unicorn.x + (img.width * abroadArea) > canvas.width && unicorn.directionX > 0;
-        var bottomBorderOut = unicorn.y + (img.height * abroadArea) > canvas.height;
+        var leftBorderOut = unicorn.position.x + (img.width * (1 - abroadArea)) < 0 && unicorn.directionX < 0;
+        var rightBorderOut = unicorn.position.x + (img.width * abroadArea) > canvas.width && unicorn.directionX > 0;
+        var bottomBorderOut = unicorn.position.y + (img.height * abroadArea) > canvas.height;
+        var changeDirection = !unicorn.rotation.enabled && Math.random() < chanceGoLeft;
 
         if (leftBorderOut) {
-            unicorn.x = canvas.width - (img.width * abroadArea);
+            unicorn.position.x = canvas.width - (img.width * abroadArea);
         } else if (rightBorderOut) {
-            unicorn.x = 0 - (img.width * (1 - abroadArea));
+            unicorn.position.x = 0 - (img.width * (1 - abroadArea));
         }
         if (bottomBorderOut) {
-            unicorn.y = 0 - (img.height * (1 - abroadArea));
+            unicorn.position.y = 0 - (img.height * (1 - abroadArea));
         }
 
-        if (unicorn.speedIterations > iterationsBeforeNewSpeed) {
-            unicorn.speedX = Math.random() * maxSpeedX;
-            unicorn.speedY = Math.random() * maxSpeedY;
-            unicorn.speedIterations = 0;
-            unicorn.directionX = (Math.random() < chanceGoLeft) ? -1 : 1;
+        if (unicorn.speed.iterations > iterationsBeforeNewSpeed) {
+            unicorn.speed.x = Math.random() * maxSpeedX;
+            unicorn.speed.y = Math.random() * maxSpeedY;
+            unicorn.speed.iterations = 0;
+            unicorn.directionX = changeDirection ? -1 : 1;
         } else {
-            unicorn.speedIterations++;
+            unicorn.speed.iterations++;
         }
 
-        unicorn.x += unicorn.directionX * unicorn.speedX;
-        unicorn.y += unicorn.speedY;
+        if (!unicorn.rotation.enabled && Math.random() < chanceStartRotation) {
+            unicorn.rotation.enabled = true;
+            unicorn.rotation.speed = (Math.random() * maxRotationSpeed + 3) | 0;
+        }
 
-        context.drawImage(img, Math.round(unicorn.x), Math.round(unicorn.y));
+        if (unicorn.rotation.enabled) {
+            drawRotatedImage(img, Math.round(unicorn.position.x), Math.round(unicorn.position.y), unicorn.rotation.angle);
+
+            unicorn.rotation.angle += unicorn.rotation.speed;
+
+            if (unicorn.rotation.angle >= 360) {
+                unicorn.rotation.angle = 0;
+                unicorn.rotation.enabled = false;
+            }
+        } else {
+            unicorn.position.x += unicorn.directionX * unicorn.speed.x;
+            unicorn.position.y += unicorn.speed.y;
+
+            context.drawImage(img, Math.round(unicorn.position.x), Math.round(unicorn.position.y));
+        }
     });
+}
+
+function drawRotatedImage(image, x, y, angle) {
+    var halfImageWidth = image.width / 2;
+    var halfImageHeight = image.height / 2;
+
+    context.save();
+    context.translate(x + halfImageWidth, y + halfImageHeight);
+    context.rotate(angle * Math.PI / 180);
+    context.drawImage(image, -halfImageWidth, -halfImageHeight);
+    context.restore();
 }
 
 document.getElementById('summon').addEventListener('click', function () {
     unicorns.push({
-        x: 0,
-        y: 0,
-        speedX: Math.random() * maxSpeedX,
-        speedY: Math.random() * maxSpeedY,
-        speedIterations: 0,
+        position: {
+            x: 0,
+            y: 0
+        },
+        speed: {
+            x: Math.random() * maxSpeedX,
+            y: Math.random() * maxSpeedY,
+            iterations: 0
+        },
+        rotation: {
+            enabled: false,
+            angle: 0,
+            speed: 0
+        },
         directionX: 1
     });
 });
