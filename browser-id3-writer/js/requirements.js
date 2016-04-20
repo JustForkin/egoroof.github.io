@@ -3,13 +3,6 @@
 var unsupported = [];
 
 try {
-    new TextEncoder('utf-8');
-    new TextEncoder('utf-16le');
-} catch (e) {
-    document.getElementById('alertInfo').className = 'alert alert-info';
-}
-
-try {
     var buffer = new ArrayBuffer(2);
     buffer.slice(0, 1); // ie10
 } catch (e) {
