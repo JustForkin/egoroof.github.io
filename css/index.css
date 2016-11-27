@@ -1,5 +1,4 @@
 body {
-    font-family: monospace;
     height: 100vh;
 }
 
@@ -11,4 +10,8 @@ body {
 
 .container {
     position: relative;
+}
+
+.card {
+    background-color: transparent;
 }
