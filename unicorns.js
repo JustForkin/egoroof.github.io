@@ -101,16 +101,16 @@ function drawRotatedImage(image, x, y, angle) {
     context.restore();
 }
 
-summon.addEventListener('click', function () {
+summon.addEventListener('click', function (e) {
     summon.style.display = 'none';
-    if (unicorns.length > 9 && Math.random() < 0.01) {
+    if (unicorns.length > 9 && Math.random() < 0.05) {
         window.location.href = 'unicorns/';
         return;
     }
     unicorns.push({
         position: {
-            x: 0,
-            y: 0
+            x: e.x - summon.width,
+            y: e.y
         },
         speed: {
             x: Math.random() * maxSpeedX,
