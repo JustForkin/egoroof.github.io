@@ -1,3 +1,5 @@
+'use strict';
+
 var maxSpeedX = 4;
 var maxSpeedY = 2;
 var maxRotationSpeed = 15;
@@ -9,9 +11,11 @@ var abroadArea = 0.3;
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 var unicorns = [];
+var summon = document.getElementById('summon');
 var unicornRight = document.createElement('img');
 var unicornLeft = document.createElement('img');
 
+summon.src = 'unicorns/img/summon.png';
 unicornRight.src = 'unicorns/img/unicorn_right.png';
 unicornLeft.src = 'unicorns/img/unicorn_left.png';
 
@@ -19,6 +23,19 @@ window.onresize = function () {
     canvas.width = document.body.clientWidth;
     canvas.height = document.body.clientHeight;
 };
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function locateSummonBtn() {
+    var maxHeight = document.body.clientHeight - summon.height;
+    var maxWidth = document.body.clientWidth - summon.width;
+
+    summon.style.top = getRandomInt(0, maxHeight) + 'px';
+    summon.style.left = getRandomInt(0, maxWidth) + 'px';
+    summon.style.display = 'block';
+}
 
 function render() {
     requestAnimationFrame(render);
@@ -84,7 +101,12 @@ function drawRotatedImage(image, x, y, angle) {
     context.restore();
 }
 
-document.getElementById('summon').addEventListener('click', function () {
+summon.addEventListener('click', function () {
+    summon.style.display = 'none';
+    if (unicorns.length > 9 && Math.random() < 0.01) {
+        window.location.href = 'unicorns/';
+        return;
+    }
     unicorns.push({
         position: {
             x: 0,
@@ -102,7 +124,9 @@ document.getElementById('summon').addEventListener('click', function () {
         },
         directionX: 1
     });
+    setTimeout(locateSummonBtn, getRandomInt(1000, 5000));
 });
 
 window.onresize();
 render();
+setTimeout(locateSummonBtn, 10000);
