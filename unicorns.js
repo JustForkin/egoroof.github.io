@@ -102,6 +102,7 @@ function drawRotatedImage(image, x, y, angle) {
 }
 
 summon.addEventListener('click', function (e) {
+    window.onresize();
     summon.style.display = 'none';
     if (unicorns.length > 9 && Math.random() < 0.05) {
         window.location.href = 'unicorns/';
@@ -109,8 +110,8 @@ summon.addEventListener('click', function (e) {
     }
     unicorns.push({
         position: {
-            x: e.x - summon.width,
-            y: e.y
+            x: e.clientX - summon.width,
+            y: e.clientY
         },
         speed: {
             x: Math.random() * maxSpeedX,
@@ -127,6 +128,5 @@ summon.addEventListener('click', function (e) {
     setTimeout(locateSummonBtn, getRandomInt(1000, 5000));
 });
 
-window.onresize();
 render();
 setTimeout(locateSummonBtn, 10000);
