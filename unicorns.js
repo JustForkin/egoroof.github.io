@@ -20,8 +20,13 @@ unicornRight.src = 'unicorns/img/unicorn_right.png';
 unicornLeft.src = 'unicorns/img/unicorn_left.png';
 
 window.onresize = function () {
+    var maxHeight = document.getElementsByClassName('container')[0].clientHeight;
+    if (document.body.clientHeight > maxHeight) {
+        maxHeight = document.body.clientHeight;
+    }
+
     canvas.width = document.body.clientWidth;
-    canvas.height = document.body.clientHeight;
+    canvas.height = maxHeight
 };
 
 function getRandomInt(min, max) {
