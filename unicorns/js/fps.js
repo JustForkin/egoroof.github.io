@@ -1,4 +1,4 @@
-class FPS {
+export default class FPS {
 
     constructor() {
         this.current = 0;
@@ -16,5 +16,3 @@ class FPS {
         }
     }
 }
-
-module.exports = FPS;

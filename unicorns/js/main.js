@@ -1,7 +1,7 @@
-const Sound = require('./sound');
-const Canvas = require('./canvas');
-const FPS = require('./fps');
-const config = require('./config');
+import Sound from './sound';
+import FPS from './fps';
+import Canvas from './canvas';
+import config from './config';
 
 const sound = new Sound(config);
 const canvas = new Canvas(config, sound);

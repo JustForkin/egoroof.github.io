@@ -1,4 +1,4 @@
-class Canvas {
+export default class Canvas {
     constructor(config, sound) {
         this.config = config;
         this.sound = sound;
@@ -60,5 +60,3 @@ class Canvas {
         });
     }
 }
-
-module.exports = Canvas;

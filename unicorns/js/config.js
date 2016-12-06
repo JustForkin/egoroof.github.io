@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     images: {
         unicorn_right: 'img/unicorn_right.png',
         unicorn_left: 'img/unicorn_left.png',

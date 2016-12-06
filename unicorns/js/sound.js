@@ -1,4 +1,4 @@
-class Sound {
+export default class Sound {
     constructor(config) {
         this.config = config;
         this.isSoundsMuted = false;
@@ -42,5 +42,3 @@ class Sound {
         this.config.music[this.activeMusicName].play();
     }
 }
-
-module.exports = Sound;
