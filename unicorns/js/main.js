@@ -10,9 +10,9 @@ const $ = document.getElementById.bind(document);
 
 function loaderProgress(tick, max) {
     const message = `Loading: ${tick} / ${max}`;
-    canvas.contextDynamic.font = 'italic 30px Arial';
+    canvas.context.font = 'italic 30px Arial';
     canvas.clear();
-    canvas.contextDynamic.fillText(message, canvas.nodeDynamic.width / 2 - 100, canvas.nodeDynamic.height / 2);
+    canvas.context.fillText(message, canvas.node.width / 2 - 100, canvas.node.height / 2);
 }
 
 function load(onSuccess) {
@@ -40,6 +40,7 @@ function render() {
     requestAnimationFrame(render);
     fps.update();
     canvas.clear();
+    canvas.drawGrass();
     canvas.drawClouds();
     canvas.drawUnicorns();
 }
@@ -75,6 +76,5 @@ load(() => {
     $('musicSwitch').style.display = 'block';
     $('terrorMode').style.display = 'block';
     sound.playMusic('get_lucky');
-    canvas.drawGrass();
     render();
 });
