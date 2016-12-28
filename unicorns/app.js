@@ -1,1 +1,116 @@
-!function(e){function t(i){if(n[i])return n[i].exports;var o=n[i]={i:i,l:!1,exports:{}};return e[i].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,t,n){Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:n})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=4)}([function(e,t){"use strict";function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),o=function(){function e(t,i){n(this,e),this.config=t,this.sound=i,this.nodeStatic=document.getElementById("staticCanvas"),this.contextStatic=this.nodeStatic.getContext("2d"),this.nodeStatic.width=800,this.nodeStatic.height=400,this.nodeDynamic=document.getElementById("dynamicCanvas"),this.contextDynamic=this.nodeDynamic.getContext("2d"),this.nodeDynamic.width=800,this.nodeDynamic.height=400}return i(e,[{key:"clear",value:function(){this.contextDynamic.clearRect(0,0,this.nodeDynamic.width,this.nodeDynamic.height)}},{key:"drawGrass",value:function(){for(var e=8;e<this.nodeStatic.width;e+=40)for(var t=310;t<this.nodeStatic.height;t+=30)this.contextStatic.drawImage(this.config.images.grass,e,t)}},{key:"drawClouds",value:function(){var e=this;this.config.cloudsPositions.forEach(function(t,n){e.contextDynamic.drawImage(e.config.images["cloud_"+n],t,0),e.config.cloudsPositions[n]+=2,e.config.cloudsPositions[n]>=e.nodeDynamic.width&&(e.config.cloudsPositions[n]=-e.config.images["cloud_"+n].width)})}},{key:"drawUnicorns",value:function(){var e=this,t="unicorn_left",n="unicorn_right";this.sound.isTerrorMode&&(t="terrorist_left",n="terrorist_right"),this.config.unicorns.forEach(function(i,o){var c=0!==i.speedY&&i.y>=210,r=i.y+e.config.images[n].height>=e.nodeDynamic.height||i.y<=0;(r||c)&&(e.config.unicorns[o].speedY*=-1),(i.x+e.config.images[n].width>=e.nodeDynamic.width||i.x<=0)&&(e.config.unicorns[o].speedX*=-1),e.config.unicorns[o].x+=e.config.unicorns[o].speedX,e.config.unicorns[o].y+=e.config.unicorns[o].speedY,e.config.unicorns[o].speedX>0?e.contextDynamic.drawImage(e.config.images[n],e.config.unicorns[o].x,e.config.unicorns[o].y):e.contextDynamic.drawImage(e.config.images[t],e.config.unicorns[o].x,e.config.unicorns[o].y)})}}]),e}();t.default=o},function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={images:{unicorn_right:"img/unicorn_right.png",unicorn_left:"img/unicorn_left.png",grass:"img/grass.png",cloud_0:"img/cloud_blue.png",cloud_1:"img/cloud_brown.png",cloud_2:"img/cloud_green.png",cloud_3:"img/cloud_pink.png",cloud_4:"img/cloud_red.png",terrorist_right:"img/terrorist_right.png",terrorist_left:"img/terrorist_left.png"},music:{get_lucky:"audio/daft_punk_get_lucky.mp3",cant_touch_this:"audio/mc_hammer_-_u_can_t_touch_this.mp3"},cloudsPositions:[0,185,370,555,740],unicorns:[{speedX:1,speedY:2,x:1,y:1},{speedX:2,speedY:3,x:100,y:20},{speedX:2,speedY:2,x:400,y:100},{speedX:1.5,speedY:0,x:500,y:245},{speedX:1.5,speedY:0,x:400,y:265},{speedX:1.5,speedY:0,x:300,y:285}]}},function(e,t){"use strict";function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),o=function(){function e(){n(this,e),this.current=0,this.updateTime=+new Date,this.node=document.getElementById("fps")}return i(e,[{key:"update",value:function(){this.current++;var e=+new Date;e-this.updateTime>1e3&&(this.node.innerText="FPS: "+this.current,this.updateTime=e,this.current=0)}}]),e}();t.default=o},function(e,t){"use strict";function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),o=function(){function e(t){n(this,e),this.config=t,this.isSoundsMuted=!1,this.isTerrorMode=!1,this.activeMusicName=""}return i(e,[{key:"playMusic",value:function(e){var t=this;this.activeMusicName=e,"string"==typeof this.config.music[e]?this.loadMusic(e,function(){return t.playMusic(e)}):(this.pauseMusic(),this.config.music[e].play())}},{key:"loadMusic",value:function(e,t){var n=this.config.music[e];this.config.music[e]=document.createElement("audio"),this.config.music[e].preload="auto",this.config.music[e].loop=!0,this.config.music[e].oncanplay=t,this.config.music[e].onerror=function(e){console.error("Unable to load file: "+e.currentTarget.src,e.currentTarget.error)},this.config.music[e].src=n}},{key:"pauseMusic",value:function(){var e=this,t=Object.keys(this.config.music);t.forEach(function(t){"string"!=typeof e.config.music[t]&&e.config.music[t].pause()})}},{key:"resumeMusic",value:function(){this.config.music[this.activeMusicName].play()}}]),e}();t.default=o},function(e,t,n){"use strict";function i(e){return e&&e.__esModule?e:{default:e}}function o(e,t){var n="Loading: "+e+" / "+t;p.contextDynamic.font="italic 30px Arial",p.clear(),p.contextDynamic.fillText(n,p.nodeDynamic.width/2-100,p.nodeDynamic.height/2)}function c(e){var t=Object.keys(h.default.images),n=t.length,i=0;o(i,n),t.forEach(function(t){var c=h.default.images[t];h.default.images[t]=new Image,h.default.images[t].onload=function(){i++,o(i,n),i===n&&e()},h.default.images[t].onerror=function(){return console.error("Unable to load: "+c)},h.default.images[t].src=c})}function r(){requestAnimationFrame(r),y.update(),_||(p.clear(),p.drawClouds(),p.drawUnicorns())}var s=n(3),u=i(s),a=n(2),d=i(a),f=n(0),l=i(f),g=n(1),h=i(g),m=new u.default(h.default),p=new l.default(h.default,m),y=new d.default,v=document.getElementById.bind(document),_=!1;document.addEventListener("keypress",function(e){32===e.charCode&&(_=!_)}),v("musicSwitch").addEventListener("click",function(e){e.preventDefault(),e.target.classList.contains("on")?(e.target.classList.remove("on"),e.target.classList.add("off"),m.isSoundsMuted=!0,m.pauseMusic()):(e.target.classList.remove("off"),e.target.classList.add("on"),m.isSoundsMuted=!1,m.resumeMusic())}),v("terrorMode").addEventListener("click",function(e){e.preventDefault(),_=!1,m.isTerrorMode=!0,v("musicSwitch").classList.contains("off")&&(v("musicSwitch").classList.remove("off"),v("musicSwitch").classList.add("on"),m.isSoundsMuted=!1),m.playMusic("cant_touch_this"),e.target.parentNode.removeChild(e.target)}),c(function(){v("musicSwitch").style.display="block",v("terrorMode").style.display="block",m.playMusic("get_lucky"),p.drawGrass(),r()})}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+class Canvas{constructor(a,b){this.config=a,this.sound=b,this.nodeStatic=document.getElementById('staticCanvas'),this.contextStatic=this.nodeStatic.getContext('2d'),this.nodeStatic.width=800,this.nodeStatic.height=400,this.nodeDynamic=document.getElementById('dynamicCanvas'),this.contextDynamic=this.nodeDynamic.getContext('2d'),this.nodeDynamic.width=800,this.nodeDynamic.height=400}clear(){this.contextDynamic.clearRect(0,0,this.nodeDynamic.width,this.nodeDynamic.height)}drawGrass(){for(let a=8;a<this.nodeStatic.width;a+=40)for(let b=310;b<this.nodeStatic.height;b+=30)this.contextStatic.drawImage(this.config.images.grass,a,b)}drawClouds(){this.config.cloudsPositions.forEach((a,b)=>{this.contextDynamic.drawImage(this.config.images[`cloud_${b}`],a,0),this.config.cloudsPositions[b]+=2,this.config.cloudsPositions[b]>=this.nodeDynamic.width&&(this.config.cloudsPositions[b]=-this.config.images[`cloud_${b}`].width)})}drawUnicorns(){let a='unicorn_left',b='unicorn_right';this.sound.isTerrorMode&&(a='terrorist_left',b='terrorist_right'),this.config.unicorns.forEach((c,d)=>{const e=0!==c.speedY&&210<=c.y,f=c.y+this.config.images[b].height>=this.nodeDynamic.height||0>=c.y;(f||e)&&(this.config.unicorns[d].speedY*=-1),(c.x+this.config.images[b].width>=this.nodeDynamic.width||0>=c.x)&&(this.config.unicorns[d].speedX*=-1),this.config.unicorns[d].x+=this.config.unicorns[d].speedX,this.config.unicorns[d].y+=this.config.unicorns[d].speedY,0<this.config.unicorns[d].speedX?this.contextDynamic.drawImage(this.config.images[b],this.config.unicorns[d].x,this.config.unicorns[d].y):this.contextDynamic.drawImage(this.config.images[a],this.config.unicorns[d].x,this.config.unicorns[d].y)})}}
+/* harmony export (immutable) */ exports["a"] = Canvas;
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {images:{unicorn_right:'img/unicorn_right.png',unicorn_left:'img/unicorn_left.png',grass:'img/grass.png',cloud_0:'img/cloud_blue.png',cloud_1:'img/cloud_brown.png',cloud_2:'img/cloud_green.png',cloud_3:'img/cloud_pink.png',cloud_4:'img/cloud_red.png',terrorist_right:'img/terrorist_right.png',terrorist_left:'img/terrorist_left.png'},music:{get_lucky:'audio/daft_punk_get_lucky.mp3',cant_touch_this:'audio/mc_hammer_-_u_can_t_touch_this.mp3'},cloudsPositions:[0,185,370,555,740],unicorns:[{speedX:1,speedY:2,x:1,y:1},{speedX:2,speedY:3,x:100,y:20},{speedX:2,speedY:2,x:400,y:100},{speedX:1.5,speedY:0,x:500,y:245},{speedX:1.5,speedY:0,x:400,y:265},{speedX:1.5,speedY:0,x:300,y:285}]};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+class FPS{constructor(){this.current=0,this.updateTime=+new Date,this.node=document.getElementById('fps')}update(){this.current++;const a=+new Date;1e3<a-this.updateTime&&(this.node.innerText=`FPS: ${this.current}`,this.updateTime=a,this.current=0)}}
+/* harmony export (immutable) */ exports["a"] = FPS;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+class Sound{constructor(a){this.config=a,this.isSoundsMuted=!1,this.isTerrorMode=!1,this.activeMusicName=''}playMusic(a){this.activeMusicName=a,'string'==typeof this.config.music[a]?this.loadMusic(a,()=>this.playMusic(a)):(this.pauseMusic(),this.config.music[a].play())}loadMusic(a,b){const c=this.config.music[a];this.config.music[a]=document.createElement('audio'),this.config.music[a].preload='auto',this.config.music[a].loop=!0,this.config.music[a].oncanplay=b,this.config.music[a].onerror=d=>{console.error(`Unable to load file: ${d.currentTarget.src}`,d.currentTarget.error)},this.config.music[a].src=c}pauseMusic(){const a=Object.keys(this.config.music);a.forEach(b=>{'string'!=typeof this.config.music[b]&&this.config.music[b].pause()})}resumeMusic(){this.config.music[this.activeMusicName].play()}}
+/* harmony export (immutable) */ exports["a"] = Sound;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sound__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fps__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__canvas__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__config__ = __webpack_require__(1);
+const sound=new __WEBPACK_IMPORTED_MODULE_0__sound__["a" /* default */](__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */]),canvas=new __WEBPACK_IMPORTED_MODULE_2__canvas__["a" /* default */](__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */],sound),fps=new __WEBPACK_IMPORTED_MODULE_1__fps__["a" /* default */],$=document.getElementById.bind(document);let isSpacePressed=!1;function loaderProgress(a,b){const c=`Loading: ${a} / ${b}`;canvas.contextDynamic.font='italic 30px Arial',canvas.clear(),canvas.contextDynamic.fillText(c,canvas.nodeDynamic.width/2-100,canvas.nodeDynamic.height/2)}function load(a){const b=Object.keys(__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images),c=b.length;let d=0;loaderProgress(d,c),b.forEach(f=>{const g=__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images[f];__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images[f]=new Image,__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images[f].onload=()=>{d++,loaderProgress(d,c),d===c&&a()},__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images[f].onerror=()=>console.error(`Unable to load: ${g}`),__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].images[f].src=g})}function render(){requestAnimationFrame(render),fps.update(),isSpacePressed||(canvas.clear(),canvas.drawClouds(),canvas.drawUnicorns())}document.addEventListener('keypress',a=>{32===a.charCode&&(isSpacePressed=!isSpacePressed)}),$('musicSwitch').addEventListener('click',a=>{a.preventDefault(),a.target.classList.contains('on')?(a.target.classList.remove('on'),a.target.classList.add('off'),sound.isSoundsMuted=!0,sound.pauseMusic()):(a.target.classList.remove('off'),a.target.classList.add('on'),sound.isSoundsMuted=!1,sound.resumeMusic())}),$('terrorMode').addEventListener('click',a=>{a.preventDefault(),isSpacePressed=!1,sound.isTerrorMode=!0,$('musicSwitch').classList.contains('off')&&($('musicSwitch').classList.remove('off'),$('musicSwitch').classList.add('on'),sound.isSoundsMuted=!1),sound.playMusic('cant_touch_this'),a.target.parentNode.removeChild(a.target)}),load(()=>{$('musicSwitch').style.display='block',$('terrorMode').style.display='block',sound.playMusic('get_lucky'),canvas.drawGrass(),render()});
+
+/***/ }
+/******/ ]);
