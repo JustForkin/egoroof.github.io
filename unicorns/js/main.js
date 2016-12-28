@@ -7,7 +7,6 @@ const sound = new Sound(config);
 const canvas = new Canvas(config, sound);
 const fps = new FPS();
 const $ = document.getElementById.bind(document);
-let isSpacePressed = false;
 
 function loaderProgress(tick, max) {
     const message = `Loading: ${tick} / ${max}`;
@@ -40,18 +39,10 @@ function load(onSuccess) {
 function render() {
     requestAnimationFrame(render);
     fps.update();
-    if (!isSpacePressed) {
-        canvas.clear();
-        canvas.drawClouds();
-        canvas.drawUnicorns();
-    }
+    canvas.clear();
+    canvas.drawClouds();
+    canvas.drawUnicorns();
 }
-
-document.addEventListener('keypress', (e) => {
-    if (e.charCode === 32) {
-        isSpacePressed = !isSpacePressed;
-    }
-});
 
 $('musicSwitch').addEventListener('click', (e) => {
     e.preventDefault();
@@ -70,7 +61,6 @@ $('musicSwitch').addEventListener('click', (e) => {
 
 $('terrorMode').addEventListener('click', (e) => {
     e.preventDefault();
-    isSpacePressed = false;
     sound.isTerrorMode = true;
     if ($('musicSwitch').classList.contains('off')) {
         $('musicSwitch').classList.remove('off');
