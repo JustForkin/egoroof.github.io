@@ -3,8 +3,7 @@
 var unsupported = [];
 
 try {
-    var buffer = new ArrayBuffer(2);
-    buffer.slice(0, 1); // ie10
+    new ArrayBuffer(2);
 } catch (e) {
     unsupported.push('ArrayBuffer');
 }

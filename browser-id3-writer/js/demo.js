@@ -20,7 +20,14 @@ function save(songArrayBuffer, picArrayBuffer) {
 
     simpleFrames.forEach(function (frame) {
         if ($(frame).value) {
-            writer.setFrame(frame, $(frame).value);
+            if (frame === 'USLT') {
+                writer.setFrame('USLT', {
+                    description: '',
+                    lyrics: $(frame).value
+                });
+            } else {
+                writer.setFrame(frame, $(frame).value);
+            }
         }
     });
     splittableFrames.forEach(function (frame) {
@@ -30,7 +37,11 @@ function save(songArrayBuffer, picArrayBuffer) {
     });
 
     if (picArrayBuffer) {
-        writer.setFrame('APIC', picArrayBuffer);
+        writer.setFrame('APIC', {
+            type: 3,
+            data: picArrayBuffer,
+            description: ''
+        });
     }
 
     writer.addTag();
