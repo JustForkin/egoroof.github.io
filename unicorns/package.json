@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "test": "eslint js/*.js",
-    "build": "webpack"
+    "build": "npm run build:concat && npm run build:transpile && npm run build:wrap && npm run build:compress",
+    "build:concat": "rollup -f es -i js/main.js -o app.js",
+    "build:transpile": "babel app.js -o app.js",
+    "build:wrap": "rollup -f iife -i app.js -o app.js",
+    "build:compress": "uglifyjs app.js -o app.js -m -c"
   },
   "devDependencies": {
-    "babel-core": "6.21.0",
-    "babel-loader": "6.2.10",
-    "babel-preset-babili": "0.0.9",
-    "eslint": "3.12.2",
-    "webpack": "2.2.0-rc.2"
+    "babel-cli": "6.23.0",
+    "babel-preset-env": "1.1.10",
+    "eslint": "3.17.1",
+    "rollup": "0.41.4",
+    "uglify-js": "2.8.8"
   }
 }
