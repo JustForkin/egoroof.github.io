@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ID3Writer demo</title>
-
+    <title>Browser ID3 Writer Demo</title>
     <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <style>
         textarea {
@@ -16,98 +14,76 @@
 <body>
 <div class="container">
     <h1>Browser ID3 Writer Demo</h1>
-
     <p>
-        Pure JavaScript library for writing ID3 (v2.3) tag to MP3 files in browsers and Node.js.
-        <a href="https://github.com/egoroof/browser-id3-writer">Source code on GitHub</a>
+        Pure JavaScript library for writing ID3 (v2.3) tag to MP3 files in browsers and Node.js.<br>
+        Works in Node.js 4+, IE10+ and all modern browsers.
     </p>
-
-    <noscript>
-        <div class="alert alert-danger">JavaScript isn't enabled in your browser.</div>
-    </noscript>
-
-    <div class="hidden" id="alertDanger">This demo won't work. Your browser doesn't fully support:&nbsp;</div>
-
     <br>
     <form id="form" class="form-group-sm">
         <div class="form-group">
             <label for="song">MP3 file</label>
             <input type="file" id="song" accept="audio/mpeg" required="required">
         </div>
-
         <ul class="nav nav-tabs" id="tabsControl">
             <li class="active"><a href="#main">Song</a></li>
             <li><a href="#album">Album</a></li>
             <li><a href="#other">Other</a></li>
         </ul>
         <br>
-
         <div id="tabMain">
             <div class="form-group">
                 <label for="TIT2">Song title</label>
                 <input type="text" id="TIT2" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TPE1">Song artists (use char ; to separate artists)</label>
                 <input type="text" id="TPE1" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TCOM">Song composers (use char ; to separate composers)</label>
                 <input type="text" id="TCOM" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TCON">Song genres (use char ; to separate genres)</label>
                 <input type="text" id="TCON" class="form-control">
             </div>
         </div>
-
         <div id="tabAlbum" class="hidden">
             <div class="form-group">
                 <label for="TALB">Album title</label>
                 <input type="text" id="TALB" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TPE2">Album artist</label>
                 <input type="text" id="TPE2" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TRCK">Song number in album (5 or 5/10)</label>
                 <input type="text" id="TRCK" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TPOS">Album disc number (1 or 1/3)</label>
                 <input type="text" id="TPOS" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="TYER">Album release year</label>
                 <input type="number" id="TYER" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="APIC">Album cover</label>
                 <input type="file" id="APIC" accept="image/*">
             </div>
         </div>
-
         <div id="tabOther" class="hidden">
             <div class="form-group">
                 <label for="TPUB">Label name</label>
                 <input type="text" id="TPUB" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="USLT">Lyrics</label>
                 <textarea id="USLT" class="form-control" rows="5"></textarea>
             </div>
         </div>
-
         <br>
         <div class="btn-toolbar">
             <div class="btn-group">
@@ -120,10 +96,8 @@
     </form>
 </div>
 <br>
-
-<script src="js/requirements.js?v=3"></script>
 <script src="js/FileSaver.min.js"></script>
-<script src="js/browser-id3-writer.3.0.2.min.js"></script>
+<script src="js/browser-id3-writer.3.0.3.js"></script>
 <script src="js/demo.js?v=2"></script>
 </body>
 </html>
