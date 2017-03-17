@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Browser ID3 Writer Demo</title>
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <style>
-        textarea {
-            resize: vertical;
-        }
-    </style>
+    <link href="css/bootstrap.min.css?v=400a6" rel="stylesheet">
 </head>
 <body>
 <a href="https://github.com/egoroof/browser-id3-writer">
-    <img style="position: absolute; top: 0; right: 0; border: 0;" alt="Fork me on GitHub"
+    <img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1" alt="Fork me on GitHub"
          src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67">
 </a>
 <div class="container">
     <h1>Browser ID3 Writer Demo</h1>
     <p>
-        Pure JavaScript library for writing ID3 (v2.3) tag to MP3 files in browsers and Node.js.<br>
-        Works in Node.js 4+, IE10+ and all modern browsers.
+        Pure JavaScript library for writing <b>ID3 (v2.3)</b> tag to MP3 files in browsers (without server) and Node.js.<br>
+        Works in <b>Node.js 4+</b>, <b>IE10+</b> and all modern browsers.
     </p>
-    <br>
-    <form id="form" class="form-group-sm">
+    <form id="form">
         <div class="form-group">
             <label for="song">MP3 file</label>
-            <input type="file" id="song" accept="audio/mpeg" required="required">
+            <input type="file" id="song" accept="audio/mpeg" required="required" class="form-control-file">
         </div>
-        <ul class="nav nav-tabs" id="tabsControl">
-            <li class="active"><a href="#main">Song</a></li>
-            <li><a href="#album">Album</a></li>
-            <li><a href="#other">Other</a></li>
+        <ul class="nav nav-tabs mb-3" id="tabsControl">
+            <li class="nav-item"><a class="nav-link active" href="#main">Song</a></li>
+            <li class="nav-item"><a class="nav-link" href="#album">Album</a></li>
+            <li class="nav-item"><a class="nav-link" href="#other">Other</a></li>
         </ul>
-        <br>
         <div id="tabMain">
             <div class="form-group">
                 <label for="TIT2">Song title</label>
@@ -52,7 +45,7 @@
                 <input type="text" id="TCON" class="form-control">
             </div>
         </div>
-        <div id="tabAlbum" class="hidden">
+        <div id="tabAlbum" class="hidden-xs-up">
             <div class="form-group">
                 <label for="TALB">Album title</label>
                 <input type="text" id="TALB" class="form-control">
@@ -75,10 +68,10 @@
             </div>
             <div class="form-group">
                 <label for="APIC">Album cover</label>
-                <input type="file" id="APIC" accept="image/*">
+                <input type="file" id="APIC" accept="image/*" class="form-control-file">
             </div>
         </div>
-        <div id="tabOther" class="hidden">
+        <div id="tabOther" class="hidden-xs-up">
             <div class="form-group">
                 <label for="TPUB">Label name</label>
                 <input type="text" id="TPUB" class="form-control">
@@ -88,20 +81,12 @@
                 <textarea id="USLT" class="form-control" rows="5"></textarea>
             </div>
         </div>
-        <br>
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <button type="submit" class="btn btn-success">Add tag and save file</button>
-            </div>
-            <div class="btn-group">
-                <button type="reset" class="btn btn-default">Reset form</button>
-            </div>
-        </div>
+        <button type="submit" class="btn btn-primary">Add tag and save file</button>
+        <button type="reset" class="btn btn-secondary">Reset form</button>
     </form>
 </div>
-<br>
 <script src="js/FileSaver.1.3.3.min.js"></script>
 <script src="js/browser-id3-writer.3.0.3.js"></script>
-<script src="js/demo.js?v=2"></script>
+<script src="js/demo.js?v=3"></script>
 </body>
 </html>

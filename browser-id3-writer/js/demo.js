@@ -70,24 +70,24 @@ $('tabsControl').addEventListener('click', function (e) {
 
     var menuLinks = this.querySelectorAll('li > a');
     for (var i = 0; i < menuLinks.length; i++) {
-        var menuElem = menuLinks[i].parentNode;
+        var menuElem = menuLinks[i];
         menuElem.classList.remove('active');
     }
 
-    e.target.parentNode.classList.add('active');
+    e.target.classList.add('active');
 
     if (e.target.hash === '#main') {
-        $('tabMain').classList.remove('hidden');
-        $('tabAlbum').classList.add('hidden');
-        $('tabOther').classList.add('hidden');
+        $('tabMain').classList.remove('hidden-xs-up');
+        $('tabAlbum').classList.add('hidden-xs-up');
+        $('tabOther').classList.add('hidden-xs-up');
     } else if (e.target.hash === '#album') {
-        $('tabMain').classList.add('hidden');
-        $('tabAlbum').classList.remove('hidden');
-        $('tabOther').classList.add('hidden');
+        $('tabMain').classList.add('hidden-xs-up');
+        $('tabAlbum').classList.remove('hidden-xs-up');
+        $('tabOther').classList.add('hidden-xs-up');
     } else if (e.target.hash === '#other') {
-        $('tabMain').classList.add('hidden');
-        $('tabAlbum').classList.add('hidden');
-        $('tabOther').classList.remove('hidden');
+        $('tabMain').classList.add('hidden-xs-up');
+        $('tabAlbum').classList.add('hidden-xs-up');
+        $('tabOther').classList.remove('hidden-xs-up');
     }
 
 });
