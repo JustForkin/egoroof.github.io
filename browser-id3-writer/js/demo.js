@@ -13,7 +13,7 @@ function loadFile(file, onSuccess) {
     reader.readAsArrayBuffer(file);
 }
 
-function save(songArrayBuffer, picArrayBuffer) {
+function save(songArrayBuffer, songName, picArrayBuffer) {
     var writer = new ID3Writer(songArrayBuffer);
     var simpleFrames = ['TIT2', 'TALB', 'TPE2', 'TRCK', 'TPOS', 'TYER', 'USLT', 'TPUB'];
     var splittableFrames = ['TPE1', 'TCOM', 'TCON'];
@@ -45,18 +45,19 @@ function save(songArrayBuffer, picArrayBuffer) {
     }
 
     writer.addTag();
-    saveAs(writer.getBlob(), 'song with tags.mp3');
+    saveAs(writer.getBlob(), songName);
 }
 
 $('form').addEventListener('submit', function (e) {
     e.preventDefault();
-    loadFile($('song').files[0], function (songArrayBuffer) {
+    var songFile = $('song').files[0];
+    loadFile(songFile, function (songArrayBuffer) {
         if ($('APIC').files.length > 0) {
             loadFile($('APIC').files[0], function (picArrayBuffer) {
-                save(songArrayBuffer, picArrayBuffer);
+                save(songArrayBuffer, songFile.name, picArrayBuffer);
             });
         } else {
-            save(songArrayBuffer);
+            save(songArrayBuffer, songFile.name);
         }
     });
 });
