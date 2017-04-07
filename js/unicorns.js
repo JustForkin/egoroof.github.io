@@ -15,7 +15,6 @@ var summon = document.getElementById('summon');
 var unicornRight = document.createElement('img');
 var unicornLeft = document.createElement('img');
 
-summon.src = 'unicorns/img/summon.png';
 unicornRight.src = 'unicorns/img/unicorn_right.png';
 unicornLeft.src = 'unicorns/img/unicorn_left.png';
 
