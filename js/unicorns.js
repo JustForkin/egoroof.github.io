@@ -20,13 +20,20 @@ unicornRight.src = 'unicorns/img/unicorn_right.png';
 unicornLeft.src = 'unicorns/img/unicorn_left.png';
 
 window.onresize = function () {
-    var maxHeight = document.getElementsByClassName('container')[0].clientHeight;
-    if (document.body.clientHeight > maxHeight) {
-        maxHeight = document.body.clientHeight;
+    var maxWidth = document.body.clientWidth;
+    var maxHeight = document.body.clientHeight;
+    var summonLeft = parseInt(summon.style.left);
+    var summonTop = parseInt(summon.style.top);
+
+    if (summonLeft + summon.width > maxWidth && maxWidth > summon.width) {
+        summon.style.left = (maxWidth - summon.width) + 'px';
+    }
+    if (summonTop + summon.height > maxHeight && maxHeight > summon.height) {
+        summon.style.top = (maxHeight - summon.height) + 'px';
     }
 
-    canvas.width = document.body.clientWidth;
-    canvas.height = maxHeight
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
 };
 
 function getRandomInt(min, max) {
@@ -106,13 +113,14 @@ function drawRotatedImage(image, x, y, angle) {
     context.restore();
 }
 
-summon.addEventListener('click', function (e) {
+function firstClick() {
+    document.getElementsByClassName('container')[0].style.display = 'none';
+    document.body.style.height = '100vh';
+    document.body.style.width = '100vw';
     window.onresize();
-    summon.style.display = 'none';
-    if (unicorns.length > 9 && Math.random() < 0.05) {
-        window.location.href = 'unicorns/';
-        return;
-    }
+}
+
+function addNewUnicorn(e) {
     unicorns.push({
         position: {
             x: e.clientX - summon.width,
@@ -130,8 +138,20 @@ summon.addEventListener('click', function (e) {
         },
         directionX: 1
     });
-    setTimeout(locateSummonBtn, getRandomInt(1000, 5000));
+}
+
+summon.addEventListener('click', function (e) {
+    if (unicorns.length === 0) {
+        firstClick();
+    }
+    if (unicorns.length > 9 && Math.random() < 0.05) {
+        window.location.href = 'unicorns/';
+        return;
+    }
+    summon.style.display = 'none';
+    addNewUnicorn(e);
+    setTimeout(locateSummonBtn, getRandomInt(500, 3000));
 });
 
 render();
-setTimeout(locateSummonBtn, 10000);
+setTimeout(locateSummonBtn, 8000);

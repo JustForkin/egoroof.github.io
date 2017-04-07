@@ -11,10 +11,10 @@
     "build:compress": "uglifyjs app.js -o app.js -m -c"
   },
   "devDependencies": {
-    "babel-cli": "6.23.0",
-    "babel-preset-env": "1.1.10",
-    "eslint": "3.17.1",
-    "rollup": "0.41.4",
-    "uglify-js": "2.8.8"
+    "babel-cli": "^6.23.0",
+    "babel-preset-env": "^1.1.10",
+    "eslint": "^3.17.1",
+    "rollup": "^0.41.4",
+    "uglify-js": "^2.8.8"
   }
 }
