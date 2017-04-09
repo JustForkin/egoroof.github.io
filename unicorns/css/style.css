@@ -3,11 +3,11 @@
     margin: 20px auto;
     position: relative;
 }
-.wrapper>canvas {
+canvas {
     border: 1px solid #000000;
     position: absolute;
 }
-.wrapper>.music {
+.music {
     width: 48px;
     height: 48px;
     position: absolute;
@@ -16,24 +16,19 @@
     display: none;
     background-image: url('../img/music.png');
 }
-.wrapper>.music.on {
+.music.on {
     background-position: 48px 0;
 }
-.wrapper>.music.on:hover {
+.music.on:hover {
     background-position: 48px 48px;
 }
-.wrapper>.music.off {
+.music.off {
     background-position: 0 0;
 }
-.wrapper>.music.off:hover {
+.music.off:hover {
     background-position: 0 48px;
 }
-.wrapper>#fps {
-    position: absolute;
-    top: 10px;
-    left: 380px;
-}
-.wrapper>.terror_mode {
+.terror_mode {
     width: 24px;
     height: 24px;
     position: absolute;

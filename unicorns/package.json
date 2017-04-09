@@ -3,7 +3,7 @@
   "version": "0.0.0-not-a-package",
   "private": true,
   "scripts": {
-    "test": "eslint js/*.js",
+    "test": "eslint js",
     "build": "npm run build:concat && npm run build:transpile && npm run build:wrap && npm run build:compress",
     "build:concat": "rollup -f es -i js/main.js -o app.js",
     "build:transpile": "babel app.js -o app.js",

@@ -1,11 +1,9 @@
 import Sound from './sound';
-import FPS from './fps';
 import Canvas from './canvas';
 import config from './config';
 
 const sound = new Sound(config);
 const canvas = new Canvas(config, sound);
-const fps = new FPS();
 const $ = document.getElementById.bind(document);
 
 function loaderProgress(tick, max) {
@@ -38,7 +36,6 @@ function load(onSuccess) {
 
 function render() {
     requestAnimationFrame(render);
-    fps.update();
     canvas.clear();
     canvas.drawGrass();
     canvas.drawClouds();
