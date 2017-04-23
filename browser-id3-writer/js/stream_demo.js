@@ -1,6 +1,13 @@
 const url = 'https://raw.githubusercontent.com/egoroof/egoroof.github.io/master/unicorns/audio/daft_punk_get_lucky.mp3';
 const songSize = 4509696;
 
+const button = document.getElementById('start');
+
+if (!streamSaver.supported) {
+    button.disabled = 'disabled';
+    button.innerText = 'Your browser does not support ReadableStream';
+}
+
 const id3Writer = new ID3Writer(new ArrayBuffer(0));
 id3Writer.setFrame('TIT2', 'Home')
     .setFrame('TPE1', ['Eminem', '50 Cent'])
@@ -10,13 +17,6 @@ id3Writer.setFrame('TIT2', 'Home')
     .setFrame('TCON', ['Soundtrack']);
 id3Writer.addTag();
 const id3Tag = new Uint8Array(id3Writer.arrayBuffer);
-
-const button = document.getElementById('start');
-
-if (!streamSaver.supported) {
-    button.disabled = 'disabled';
-    button.innerText = 'Your browser does not support ReadableStream';
-}
 
 button.addEventListener('click', function() {
     button.disabled = 'disabled';
