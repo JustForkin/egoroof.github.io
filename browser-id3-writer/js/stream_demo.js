@@ -5,7 +5,7 @@ const button = document.getElementById('start');
 
 if (!streamSaver.supported) {
     button.disabled = 'disabled';
-    button.innerText = 'Your browser does not support ReadableStream';
+    button.innerText = 'Your browser does not support ReadableStream or Service Worker';
 }
 
 const id3Writer = new ID3Writer(new ArrayBuffer(0));
