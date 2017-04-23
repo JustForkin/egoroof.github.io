@@ -13,21 +13,26 @@ const id3Tag = new Uint8Array(id3Writer.arrayBuffer);
 
 const button = document.getElementById('start');
 
-button.addEventListener('click', function () {
+if (!streamSaver.supported) {
+    button.disabled = 'disabled';
+    button.innerText = 'Your browser does not support ReadableStream';
+}
+
+button.addEventListener('click', function() {
     button.disabled = 'disabled';
     button.innerText = 'Fetching...';
     fetch(url).then(response => {
+        if (!response.ok) {
+            button.innerText = 'HTTP status error';
+        }
+
         const fileStream = streamSaver.createWriteStream('daft_punk_get_lucky.mp3', songSize + id3Tag.byteLength);
         const writer = fileStream.getWriter();
         const reader = response.body.getReader();
         let readByteCount = 0;
 
         // push id3 tag first
-        writer.write(id3Tag).then(pump).then(() => {
-            console.log('All done');
-            button.innerText = 'Start download';
-            button.disabled = '';
-        });
+        writer.write(id3Tag).then(pump).then(() => button.innerText = 'All done');
 
         function pump() {
             return reader.read().then(result => {
@@ -40,5 +45,5 @@ button.addEventListener('click', function () {
                 }
             });
         }
-    });
+    }).catch(e => button.innerText = e.message);
 });
