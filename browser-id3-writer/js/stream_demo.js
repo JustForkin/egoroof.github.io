@@ -1,4 +1,4 @@
-const url = 'https://raw.githubusercontent.com/egoroof/egoroof.github.io/master/unicorns/audio/daft_punk_get_lucky.mp3';
+const url = 'https://cdn.rawgit.com/egoroof/egoroof.github.io/master/unicorns/audio/daft_punk_get_lucky.mp3';
 const songSize = 4509696;
 
 const button = document.getElementById('start');
