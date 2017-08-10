@@ -116,6 +116,7 @@ function firstClick() {
     document.getElementsByClassName('container')[0].style.display = 'none';
     document.body.style.height = '100vh';
     document.body.style.width = '100vw';
+    canvas.style.display = 'block';
     window.onresize();
 }
 

@@ -6,92 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Artyom Egorov</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css?v=400a6">
-    <link rel="stylesheet" href="css/index.css?v=4">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .container {
+            margin: 21px;
+        }
+
+        .list-unstyled {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        .media-body {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .media > img {
+            padding-top: 4px;
+        }
+
+        a {
+            color: #0275d8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #014c8c;
+            text-decoration: underline;
+        }
+
+        #summon {
+            display: none;
+            position: absolute;
+            width: 70px;
+            height: 72px;
+            cursor: pointer;
+        }
+
+        #canvas {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 
 <body>
 
-<canvas id="canvas"></canvas>
-
 <div class="container">
-    <h1 class="pt-3">Artyom Egorov</h1>
+    <h1>Artyom Egorov</h1>
+    <p>Software developer</p>
 
-    <p class="lead">Software developer</p>
-
-    <div class="row">
-        <div class="col-sm-6">
-            <ul class="list-unstyled">
-                <li class="media">
-                    <img src="img/bitbucket.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://bitbucket.org/egoroof/">Bitbucket</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/github.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://github.com/egoroof">GitHub</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/email.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="mailto:mail@egoroof.ru">mail@egoroof.ru</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/npm.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://www.npmjs.com/~egoroof">npm</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/skype.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="skype:mail@egoroof.ru?chat">Skype</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/telegram.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://t.me/egoroof">Telegram</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/tw.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://twitter.com/egoroof">Twitter</a>
-                    </div>
-                </li>
-                <li class="media">
-                    <img src="img/vk.png" width="16" height="16" class="mr-1 align-self-center">
-                    <div class="media-body">
-                        <a href="https://vk.com/tema.egoroof">VK</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="col-sm-6">
-            <p>Open Source</p>
-            <ul>
-                <li>
-                    <a href="https://github.com/egoroof/yandex-music-fisher">Yandex Music Fisher</a>
-                    <span class="text-muted">2014</span>
-                </li>
-                <li>
-                    <a href="https://github.com/egoroof/browser-id3-writer">Browser ID3 Writer</a>
-                    <span class="text-muted">2015</span>
-                </li>
-                <li>
-                    <a href="https://github.com/egoroof/blowfish">Blowfish</a>
-                    <span class="text-muted">2017</span>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <ul class="list-unstyled">
+        <li class="media">
+            <img src="img/bitbucket.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://bitbucket.org/egoroof/">Bitbucket</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/github.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://github.com/egoroof">GitHub</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/email.png" width="16" height="16">
+            <div class="media-body">
+                <a href="mailto:mail@egoroof.ru">mail@egoroof.ru</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/npm.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://www.npmjs.com/~egoroof">npm</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/skype.png" width="16" height="16">
+            <div class="media-body">
+                <a href="skype:mail@egoroof.ru?chat">Skype</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/telegram.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://t.me/egoroof">Telegram</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/tw.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://twitter.com/egoroof">Twitter</a>
+            </div>
+        </li>
+        <li class="media">
+            <img src="img/vk.png" width="16" height="16">
+            <div class="media-body">
+                <a href="https://vk.com/tema.egoroof">VK</a>
+            </div>
+        </li>
+    </ul>
 </div>
 
+<canvas id="canvas"></canvas>
 <img src="unicorns/img/summon.png" id="summon">
 
 <script src="js/unicorns.js?v=6" defer></script>
