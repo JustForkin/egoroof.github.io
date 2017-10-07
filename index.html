@@ -11,6 +11,16 @@
             margin: 0;
             font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
+        
+        .unselectable {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
 
         .container {
             margin: 21px;
@@ -115,8 +125,8 @@
     </ul>
 </div>
 
-<canvas id="canvas"></canvas>
-<img src="img/summon.png" id="summon">
+<canvas id="canvas" class="unselectable"></canvas>
+<img src="img/summon.png" id="summon" class="unselectable">
 
 <script src="js/unicorns.js?v=6" defer></script>
 </body>
