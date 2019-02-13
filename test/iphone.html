@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Iphone test bug</title>
+</head>
+<body>
+<div id="map" style="width:500px; height:400px"></div>
+<h1>Some content</h1>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<h2>Another content</h2>
+<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<script>
+    DG.then(function () {
+        var map = DG.map('map', {
+            center: [54.98, 82.89],
+            zoom: 13,
+            zoomControl: false,
+            fullscreenControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            touchZoom: false,
+            doubleClickZoom: false,
+            tap: false,
+        });
+        DG.marker([54.98, 82.89]).addTo(map).bindPopup('Вы кликнули по мне!');
+    });
+</script>
+</body>
+</html>
